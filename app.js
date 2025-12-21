@@ -5,7 +5,7 @@ async function gerar() {
 
   resultado.innerText = "⏳ Gerando shorts...";
 
-  try { 
+  try {
     const res = await fetch("https://wjr.app.n8n.cloud/webhook/gerar", {
       method: "POST",
       headers: {
