@@ -3,13 +3,6 @@ async function gerar() {
   const tema = document.getElementById("tema").value;
   const resultado = document.getElementById("resultado");
 
-  // Validação simples
-  if (!tema) {
-    resultado.innerHTML = "⚠️ Digite um tema para gerar os shorts.";
-    return;
-  }
-
-  // Loading
   resultado.innerHTML = "⏳ Gerando roteiros virais...";
 
   try {
@@ -18,72 +11,61 @@ async function gerar() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        categoria,
-        tema
-      })
+      body: JSON.stringify({ categoria, tema })
     });
 
-    if (!res.ok) {
-      throw new Error("Erro na requisição");
-    }
-
     const data = await res.json();
-
-    // Limpa resultado
     resultado.innerHTML = "";
 
-    // Segurança
-    if (!data.shorts || data.shorts.length === 0) {
-      resultado.innerHTML = "❌ Nenhum roteiro gerado.";
-      return;
-    }
+    let todosOsRoteiros = "";
 
-    // Renderiza shorts
     data.shorts.forEach((s, i) => {
+      const roteiroViral = `
+GANCHO (0–3s):
+Você sabia disso sobre ${tema}?
+
+QUEBRA DE PADRÃO (3–7s):
+Quase ninguém percebe isso…
+
+DESENVOLVIMENTO:
+${s.roteiro}
+
+CTA FINAL:
+Segue para a parte 2.
+      `.trim();
+
+      todosOsRoteiros += `🎬 SHORT ${i + 1}\n${roteiroViral}\n\n------------------\n\n`;
+
       const bloco = document.createElement("div");
       bloco.className = "short-bloco";
 
-      const textoLimpo = s.roteiro.trim();
-
       bloco.innerHTML = `
-        <h3>🎬 ${s.titulo || `Short ${i + 1}`}</h3>
-
-        <pre>${textoLimpo}</pre>
-
-        <button class="btn-copiar" onclick="copiarTexto(${i}, this)">
-          📋 Copiar roteiro
-        </button>
-
-        <hr>
+        <h3>🎬 Short ${i + 1}</h3>
+        <pre>${roteiroViral}</pre>
+        <button onclick="copiarTexto(${i})">📋 Copiar roteiro</button>
       `;
 
       resultado.appendChild(bloco);
-
-      // Guarda texto para cópia
-      window[`roteiro_${i}`] = textoLimpo;
+      window["roteiro_" + i] = roteiroViral;
     });
 
+    // Botão copiar tudo
+    const btnTudo = document.createElement("button");
+    btnTudo.className = "btn-copiar-tudo";
+    btnTudo.innerText = "📋 Copiar TODOS os roteiros";
+    btnTudo.onclick = () => {
+      navigator.clipboard.writeText(todosOsRoteiros);
+      alert("Todos os roteiros foram copiados!");
+    };
+
+    resultado.appendChild(btnTudo);
+
   } catch (e) {
-    console.error(e);
-    resultado.innerHTML = "❌ Erro ao gerar conteúdo. Tente novamente.";
+    resultado.innerHTML = "❌ Erro ao gerar conteúdo.";
   }
 }
 
-// Copiar sem alert (UX mobile)
-function copiarTexto(i, botao) {
-  const texto = window[`roteiro_${i}`];
-
-  if (!texto) return;
-
-  navigator.clipboard.writeText(texto).then(() => {
-    const textoOriginal = botao.innerText;
-    botao.innerText = "✅ Copiado!";
-    botao.disabled = true;
-
-    setTimeout(() => {
-      botao.innerText = textoOriginal;
-      botao.disabled = false;
-    }, 1500);
-  });
+function copiarTexto(i) {
+  navigator.clipboard.writeText(window["roteiro_" + i]);
+  alert("Roteiro copiado!");
 }
