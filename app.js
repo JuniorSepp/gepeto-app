@@ -1,97 +1,76 @@
-// ===============================
-// Gepeto Shorts - app.js
-// ===============================
-
 async function gerar() {
   const categoria = document.getElementById("categoria").value;
   const tema = document.getElementById("tema").value;
+
   const resultado = document.getElementById("resultado");
-
-  if (!tema) {
-    resultado.innerHTML = "⚠️ Digite um tema para gerar os shorts.";
-    return;
-  }
-
-  resultado.innerHTML = "⏳ Gerando roteiros virais...";
+  resultado.innerHTML = "⏳ Gerando conteúdo viral...";
 
   try {
-    const res = await fetch("https://wjr.app.n8n.cloud/webhook/gerar", {
+    const res = await fetch("https://SEU-WEBHOOK-AQUI", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        categoria: categoria,
-        tema: tema
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ categoria, tema })
     });
 
-    if (!res.ok) {
-      throw new Error("Erro na resposta do servidor");
-    }
-
     const data = await res.json();
-
-    if (!data.shorts || data.shorts.length === 0) {
-      resultado.innerHTML = "⚠️ Nenhum roteiro retornado.";
-      return;
-    }
-
     resultado.innerHTML = "";
-
-    let todosOsRoteiros = "";
 
     data.shorts.forEach((s, i) => {
       const bloco = document.createElement("div");
       bloco.className = "short-bloco";
 
-      const texto = `
-🎬 ${s.titulo}
-
-${s.roteiro}
-`.trim();
-
-      todosOsRoteiros += texto + "\n\n---------------------\n\n";
-
       bloco.innerHTML = `
         <h3>🎬 ${s.titulo}</h3>
+
+        <p><strong>⚡ Hook:</strong><br>${s.hook}</p>
+
         <pre>${s.roteiro}</pre>
-        <button class="btn-copy" onclick="copiarTexto(${i})">📋 Copiar roteiro</button>
+
+        <p><strong>📢 CTA:</strong> ${s.cta}</p>
+
+        <p><strong>🖼️ Texto da Thumbnail:</strong><br>${s.thumbnail_text}</p>
+
+        <p><strong>🎨 Prompt da Thumbnail:</strong></p>
+        <pre>${s.thumbnail_prompt}</pre>
+
+        <p><strong>#️⃣ Hashtags:</strong> ${s.hashtags.join(" ")}</p>
+
+        <button onclick="copiarTudo(${i})">📋 Copiar tudo</button>
         <hr>
       `;
 
       resultado.appendChild(bloco);
-
-      window["roteiro_" + i] = texto;
+      window[`short_${i}`] = s;
     });
 
-    // Botão copiar todos
-    const btnTodos = document.createElement("button");
-    btnTodos.className = "btn-copy-all";
-    btnTodos.innerText = "📋 Copiar TODOS os roteiros";
-    btnTodos.onclick = () => copiarTodos(todosOsRoteiros);
-
-    resultado.appendChild(btnTodos);
-
-  } catch (err) {
-    console.error(err);
-    resultado.innerHTML = "❌ Erro ao gerar conteúdo. Verifique o webhook.";
+  } catch (e) {
+    resultado.innerHTML = "❌ Erro ao gerar conteúdo.";
   }
 }
 
-// ===============================
-// Copiar funções
-// ===============================
+function copiarTudo(i) {
+  const s = window[`short_${i}`];
+  const texto = `
+${s.titulo}
 
-function copiarTexto(i) {
-  const texto = window["roteiro_" + i];
-  navigator.clipboard.writeText(texto).then(() => {
-    alert("Roteiro copiado!");
-  });
-}
+HOOK:
+${s.hook}
 
-function copiarTodos(texto) {
-  navigator.clipboard.writeText(texto).then(() => {
-    alert("Todos os roteiros foram copiados!");
-  });
+ROTEIRO:
+${s.roteiro}
+
+CTA:
+${s.cta}
+
+THUMBNAIL TEXTO:
+${s.thumbnail_text}
+
+THUMBNAIL PROMPT:
+${s.thumbnail_prompt}
+
+HASHTAGS:
+${s.hashtags.join(" ")}
+  `;
+  navigator.clipboard.writeText(texto);
+  alert("Conteúdo completo copiado!");
 }
