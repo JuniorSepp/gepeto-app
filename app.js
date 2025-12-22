@@ -1,104 +1,97 @@
+// ===============================
+// Gepeto Shorts - app.js
+// ===============================
+
 async function gerar() {
   const categoria = document.getElementById("categoria").value;
   const tema = document.getElementById("tema").value;
   const resultado = document.getElementById("resultado");
 
   if (!tema) {
-    alert("Digite um tema");
+    resultado.innerHTML = "⚠️ Digite um tema para gerar os shorts.";
     return;
   }
 
-  resultado.innerHTML = "⏳ Gerando conteúdos virais...";
+  resultado.innerHTML = "⏳ Gerando roteiros virais...";
 
   try {
     const res = await fetch("https://wjr.app.n8n.cloud/webhook/gerar", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ categoria, tema })
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        categoria: categoria,
+        tema: tema
+      })
     });
 
+    if (!res.ok) {
+      throw new Error("Erro na resposta do servidor");
+    }
+
     const data = await res.json();
+
+    if (!data.shorts || data.shorts.length === 0) {
+      resultado.innerHTML = "⚠️ Nenhum roteiro retornado.";
+      return;
+    }
+
     resultado.innerHTML = "";
 
-    let copiarTudo = "";
+    let todosOsRoteiros = "";
 
     data.shorts.forEach((s, i) => {
       const bloco = document.createElement("div");
       bloco.className = "short-bloco";
 
-      const roteiro = s.roteiro;
-      const imagemPrompt = s.imagem_prompt;
-      const thumbTexto = s.thumbnail.texto;
-      const thumbPrompt = s.thumbnail.prompt;
+      const texto = `
+🎬 ${s.titulo}
 
-      const plataformas = `
-YouTube: ${s.plataformas.youtube}
-Instagram: ${s.plataformas.instagram}
-TikTok: ${s.plataformas.tiktok}
-X (Twitter): ${s.plataformas.x}
-      `;
+${s.roteiro}
+`.trim();
 
-      copiarTudo += `
-${s.titulo}
-${roteiro}
-
-IMAGEM (VÍDEO):
-${imagemPrompt}
-
-THUMBNAIL:
-${thumbTexto}
-${thumbPrompt}
-
-PLATAFORMAS:
-${plataformas}
----------------------
-`;
+      todosOsRoteiros += texto + "\n\n---------------------\n\n";
 
       bloco.innerHTML = `
-<h3>🎬 ${s.titulo}</h3>
-
-<pre>${roteiro}</pre>
-<button onclick="copiarTexto('roteiro_${i}')">📋 Copiar roteiro</button>
-
-<h4>🖼️ Prompt de IMAGEM (vídeo)</h4>
-<pre>${imagemPrompt}</pre>
-<button onclick="copiarTexto('imagem_${i}')">📋 Copiar imagem</button>
-
-<h4>🔥 THUMBNAIL VIRAL</h4>
-<pre><strong>${thumbTexto}</strong>\n${thumbPrompt}</pre>
-<button onclick="copiarTexto('thumb_${i}')">📋 Copiar thumbnail</button>
-
-<h4>📈 Plataformas</h4>
-<pre>${plataformas}</pre>
-
-<hr>
+        <h3>🎬 ${s.titulo}</h3>
+        <pre>${s.roteiro}</pre>
+        <button class="btn-copy" onclick="copiarTexto(${i})">📋 Copiar roteiro</button>
+        <hr>
       `;
 
       resultado.appendChild(bloco);
 
-      window[`roteiro_${i}`] = roteiro;
-      window[`imagem_${i}`] = imagemPrompt;
-      window[`thumb_${i}`] = `${thumbTexto}\n${thumbPrompt}`;
+      window["roteiro_" + i] = texto;
     });
 
-    const btnTudo = document.createElement("button");
-    btnTudo.innerText = "📋 Copiar TODOS os conteúdos";
-    btnTudo.className = "btn-copiar-tudo";
-    btnTudo.onclick = () => copiarDireto(copiarTudo);
+    // Botão copiar todos
+    const btnTodos = document.createElement("button");
+    btnTodos.className = "btn-copy-all";
+    btnTodos.innerText = "📋 Copiar TODOS os roteiros";
+    btnTodos.onclick = () => copiarTodos(todosOsRoteiros);
 
-    resultado.appendChild(btnTudo);
+    resultado.appendChild(btnTodos);
 
-  } catch (e) {
-    resultado.innerHTML = "❌ Erro ao gerar conteúdo.";
+  } catch (err) {
+    console.error(err);
+    resultado.innerHTML = "❌ Erro ao gerar conteúdo. Verifique o webhook.";
   }
 }
 
-function copiarTexto(chave) {
-  navigator.clipboard.writeText(window[chave]);
-  alert("Conteúdo copiado!");
+// ===============================
+// Copiar funções
+// ===============================
+
+function copiarTexto(i) {
+  const texto = window["roteiro_" + i];
+  navigator.clipboard.writeText(texto).then(() => {
+    alert("Roteiro copiado!");
+  });
 }
 
-function copiarDireto(texto) {
-  navigator.clipboard.writeText(texto);
-  alert("Tudo copiado!");
+function copiarTodos(texto) {
+  navigator.clipboard.writeText(texto).then(() => {
+    alert("Todos os roteiros foram copiados!");
+  });
 }
