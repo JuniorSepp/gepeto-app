@@ -1,76 +1,40 @@
-async function gerar() {
+async function gerarShorts() {
   const categoria = document.getElementById("categoria").value;
   const tema = document.getElementById("tema").value;
 
   const resultado = document.getElementById("resultado");
-  resultado.innerHTML = "⏳ Gerando conteúdo viral...";
+  resultado.innerHTML = "⏳ Gerando conteúdo...";
 
   try {
-    const res = await fetch("https://SEU-WEBHOOK-AQUI", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ categoria, tema })
-    });
+    const response = await fetch(
+      "https://wjr.app.n8n.cloud/webhook/gepeto",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          categoria: categoria,
+          tema: tema
+        })
+      }
+    );
 
-    const data = await res.json();
-    resultado.innerHTML = "";
+    if (!response.ok) {
+      throw new Error("Erro HTTP: " + response.status);
+    }
 
-    data.shorts.forEach((s, i) => {
-      const bloco = document.createElement("div");
-      bloco.className = "short-bloco";
+    const data = await response.json();
 
-      bloco.innerHTML = `
-        <h3>🎬 ${s.titulo}</h3>
+    // validação de segurança
+    if (!data || !data.shorts || !Array.isArray(data.shorts)) {
+      throw new Error("Resposta inválida da API");
+    }
 
-        <p><strong>⚡ Hook:</strong><br>${s.hook}</p>
+    renderizarShorts(data.shorts);
 
-        <pre>${s.roteiro}</pre>
-
-        <p><strong>📢 CTA:</strong> ${s.cta}</p>
-
-        <p><strong>🖼️ Texto da Thumbnail:</strong><br>${s.thumbnail_text}</p>
-
-        <p><strong>🎨 Prompt da Thumbnail:</strong></p>
-        <pre>${s.thumbnail_prompt}</pre>
-
-        <p><strong>#️⃣ Hashtags:</strong> ${s.hashtags.join(" ")}</p>
-
-        <button onclick="copiarTudo(${i})">📋 Copiar tudo</button>
-        <hr>
-      `;
-
-      resultado.appendChild(bloco);
-      window[`short_${i}`] = s;
-    });
-
-  } catch (e) {
+  } catch (error) {
+    console.error(error);
     resultado.innerHTML = "❌ Erro ao gerar conteúdo.";
   }
-}
-
-function copiarTudo(i) {
-  const s = window[`short_${i}`];
-  const texto = `
-${s.titulo}
-
-HOOK:
-${s.hook}
-
-ROTEIRO:
-${s.roteiro}
-
-CTA:
-${s.cta}
-
-THUMBNAIL TEXTO:
-${s.thumbnail_text}
-
-THUMBNAIL PROMPT:
-${s.thumbnail_prompt}
-
-HASHTAGS:
-${s.hashtags.join(" ")}
-  `;
-  navigator.clipboard.writeText(texto);
-  alert("Conteúdo completo copiado!");
 }
