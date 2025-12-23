@@ -4,54 +4,90 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gepeto Shorts</title>
-  <link rel="stylesheet" href="style.css"/>
+
+  <style>
+    body {
+      background:#000;
+      color:#fff;
+      font-family: Arial, sans-serif;
+      margin:0;
+      padding:20px;
+    }
+    .app {
+      max-width:480px;
+      margin:auto;
+    }
+    h1 {
+      text-align:center;
+    }
+    select, input, button {
+      width:100%;
+      padding:14px;
+      margin-top:12px;
+      border-radius:8px;
+      border:none;
+      font-size:16px;
+    }
+    select, input {
+      background:#f2f2f2;
+      color:#000;
+    }
+    button {
+      background:#e50914;
+      color:#fff;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    #resultado {
+      margin-top:20px;
+    }
+    pre {
+      white-space:pre-wrap;
+      background:#111;
+      padding:16px;
+      border-radius:8px;
+      line-height:1.6;
+    }
+  </style>
 </head>
 
 <body>
   <div class="app">
     <h1>🎬 Gepeto Shorts</h1>
-    <p>Roteiros virais aprovados pelo algoritmo</p>
+    <p style="text-align:center;">Roteiros virais aprovados pelo algoritmo</p>
 
-    <!-- Categoria -->
-    <label>Categoria</label>
     <select id="categoria">
-      <option value="">Escolha a categoria</option>
+      <option value="">Categoria</option>
       <option value="Anime">Anime</option>
       <option value="Bíblico">Bíblico</option>
       <option value="Tecnologia">Tecnologia</option>
       <option value="Curiosidades">Curiosidades</option>
     </select>
 
-    <!-- Tema -->
-    <label>Tema do vídeo</label>
-    <input id="tema" type="text" placeholder="Ex: Naruto vs Samurai X"/>
+    <input id="tema" type="text" placeholder="Tema do vídeo (ex: Naruto vs Samurai X)" />
 
-    <!-- Tipo de vídeo -->
-    <label>Plataforma</label>
     <select id="plataforma">
+      <option value="">Plataforma</option>
       <option value="YouTube Shorts">YouTube Shorts</option>
       <option value="Instagram Reels">Instagram Reels</option>
       <option value="TikTok">TikTok</option>
     </select>
 
-    <!-- Duração -->
-    <label>Duração</label>
     <select id="duracao">
-      <option value="15s">15 segundos</option>
-      <option value="30s">30 segundos</option>
-      <option value="58s" selected>58 segundos (viral)</option>
+      <option value="">Duração</option>
+      <option value="15 segundos">15 segundos</option>
+      <option value="30 segundos">30 segundos</option>
+      <option value="58 segundos">58 segundos</option>
     </select>
 
-    <!-- Estilo -->
-    <label>Estilo do vídeo</label>
     <select id="estilo">
+      <option value="">Estilo do vídeo</option>
       <option value="Dark Viral">Dark Viral</option>
       <option value="Épico">Épico</option>
       <option value="Inspirador">Inspirador</option>
-      <option value="Solene">Solene</option>
     </select>
 
-    <button id="btnGerar" onclick="gerar()">GERAR VÍDEO</button>
+    <button id="btnGerar" onclick="gerar()">GERAR SHORT</button>
 
     <div id="resultado"></div>
   </div>
