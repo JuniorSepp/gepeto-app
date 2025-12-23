@@ -22,16 +22,15 @@ async function gerarShorts() {
 
     const data = await response.json();
 
-    const texto =
-      data?.output?.[0]?.content?.[0]?.text;
+    const texto = data?.shorts?.[0]?.roteiro;
 
     if (!texto) {
       resultado.innerHTML =
-        "⚠️ O servidor respondeu, mas não retornou texto.";
+        "⚠️ O servidor respondeu, mas não retornou roteiro.";
       return;
     }
 
-    // Separar blocos
+    // Separação dos blocos
     const roteiro = texto.split("THUMBNAIL_TEXTO:")[0]
       .replace("ROTEIRO:", "")
       .trim();
