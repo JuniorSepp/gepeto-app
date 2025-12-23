@@ -6,84 +6,94 @@
   <title>Gepeto Shorts</title>
 
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #0e0e0e;
-      color: #ffffff;
+    * {
+      box-sizing: border-box;
       font-family: Arial, Helvetica, sans-serif;
     }
 
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
     .container {
+      width: 100%;
       max-width: 420px;
-      margin: 0 auto;
-      padding: 24px 16px;
     }
 
     h1 {
       text-align: center;
-      font-size: 26px;
       margin-bottom: 4px;
+      font-size: 26px;
     }
 
-    .subtitle {
+    .sub {
       text-align: center;
       font-size: 14px;
-      color: #bbbbbb;
+      color: #aaa;
       margin-bottom: 24px;
     }
 
     label {
       font-size: 13px;
-      color: #cccccc;
-      margin-bottom: 6px;
+      color: #bbb;
       display: block;
+      margin-bottom: 6px;
     }
 
     select,
     input {
       width: 100%;
       padding: 14px;
-      margin-bottom: 16px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: none;
-      outline: none;
-      background: #1e1e1e;
-      color: #ffffff;
+      background: #1a1a1a;
+      color: #fff;
+      margin-bottom: 16px;
       font-size: 15px;
+    }
+
+    select:focus,
+    input:focus {
+      outline: 2px solid #e50914;
     }
 
     button {
       width: 100%;
       padding: 16px;
+      border-radius: 12px;
       border: none;
-      border-radius: 10px;
-      background: #d6002f;
-      color: #ffffff;
+      background: #e50914;
+      color: #fff;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
+      transition: opacity 0.2s;
     }
 
-    button:active {
-      opacity: 0.85;
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     #resultado {
       margin-top: 24px;
-      padding: 16px;
-      background: #121212;
-      border-radius: 10px;
       font-size: 14px;
-      line-height: 1.6;
-      white-space: pre-wrap;
     }
 
-    .footer {
-      text-align: center;
-      font-size: 11px;
-      color: #666;
-      margin-top: 24px;
+    .info {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #777;
+      display: flex;
+      gap: 6px;
+      align-items: center;
     }
   </style>
 </head>
@@ -91,34 +101,37 @@
 <body>
   <div class="container">
     <h1>🎬 Gepeto Shorts</h1>
-    <div class="subtitle">Roteiros dark e virais para Shorts, Reels e TikTok</div>
+    <div class="sub">
+      Roteiros dark e virais para Shorts, Reels e TikTok
+    </div>
 
     <label for="categoria">Categoria</label>
     <select id="categoria">
       <option value="">Selecione</option>
-      <option value="dark">Dark</option>
-      <option value="biblico">Bíblico Dark</option>
-      <option value="motivacional">Motivacional</option>
-      <option value="curiosidades">Curiosidades</option>
-      <option value="anime">Anime</option>
+      <option value="Anime">Anime</option>
+      <option value="Bíblico">Bíblico</option>
+      <option value="Curiosidades">Curiosidades</option>
+      <option value="Motivação">Motivação</option>
+      <option value="Terror">Terror</option>
     </select>
 
     <label for="tema">Tema do vídeo</label>
     <input
-      type="text"
       id="tema"
-      placeholder="Ex: viver no automático, medo de mudar, acordar tarde demais"
+      type="text"
+      placeholder="Ex: Naruto, Apocalipse, Medo, Silêncio"
     />
 
-    <button onclick="gerar()">GERAR SHORTS</button>
+    <button id="btnGerar" onclick="gerar()">GERAR SHORTS</button>
 
     <div id="resultado"></div>
 
-    <div class="footer">
+    <div class="info">
       ⚠️ Conteúdo otimizado para retenção e loop psicológico
     </div>
   </div>
 
+  <!-- IMPORTANTE: app.js pode ficar separado OU colado abaixo -->
   <script src="app.js"></script>
 </body>
 </html>
