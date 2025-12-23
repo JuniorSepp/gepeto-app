@@ -2,16 +2,22 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
   <title>Gepeto Shorts</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
 
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
   <div class="app">
     <h1>🎬 Gepeto Shorts</h1>
     <p>Crie roteiros curtos e virais</p>
 
+    <!-- CATEGORIA -->
     <select id="categoria">
       <option value="biblico">Bíblico</option>
       <option value="anime">Anime</option>
@@ -19,13 +25,23 @@
       <option value="noticias">Notícias</option>
     </select>
 
-    <input id="tema" placeholder="Digite o tema (ex: Naruto)" />
+    <!-- TEMA -->
+    <input
+      id="tema"
+      type="text"
+      placeholder="Digite o tema (ex: Naruto)"
+    />
 
+    <!-- BOTÃO -->
     <button onclick="gerar()">GERAR SHORTS</button>
 
-    <pre id="resultado"></pre>
+    <!-- RESULTADO (CORREÇÃO CRÍTICA) -->
+    <!-- ❌ NÃO USAR <pre> -->
+    <!-- ✅ USAR <div> -->
+    <div id="resultado"></div>
   </div>
 
+  <!-- JS -->
   <script src="app.js"></script>
 </body>
-</html>  
+</html>
