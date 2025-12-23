@@ -1,174 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Gepeto Shorts</title>
-
-<style>
-body {
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family: Arial, Helvetica, sans-serif;
-}
-.container {
-  max-width:420px;
-  margin:auto;
-  padding:20px;
-}
-h1 {
-  text-align:center;
-  margin-bottom:4px;
-}
-.sub {
-  text-align:center;
-  color:#aaa;
-  font-size:14px;
-  margin-bottom:24px;
-}
-label {
-  font-size:13px;
-  color:#bbb;
-}
-select,input {
-  width:100%;
-  padding:14px;
-  border-radius:10px;
-  border:none;
-  background:#1a1a1a;
-  color:#fff;
-  margin:8px 0 16px;
-}
-button {
-  width:100%;
-  padding:16px;
-  border-radius:12px;
-  border:none;
-  background:#e50914;
-  color:#fff;
-  font-size:16px;
-  font-weight:bold;
-}
-button:disabled {
-  opacity:.6;
-}
-#resultado {
-  margin-top:20px;
-}
-pre {
-  white-space:pre-wrap;
-  background:#050505;
-  padding:16px;
-  border-radius:10px;
-  font-size:14px;
-  line-height:1.6;
-}
-.copy {
-  margin-top:12px;
-  padding:12px;
-  background:#222;
-  border:none;
-  color:#fff;
-  width:100%;
-  border-radius:8px;
-  font-weight:bold;
-}
-.info {
-  margin-top:18px;
-  font-size:12px;
-  color:#777;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gepeto Shorts</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 
 <body>
-<div class="container">
-<h1>🎬 Gepeto Shorts</h1>
-<div class="sub">Shorts, Reels e TikTok otimizados para retenção</div>
+  <div class="app">
+    <h1>🎬 Gepeto Shorts</h1>
+    <p>Roteiros virais para YouTube Shorts</p>
 
-<label>Categoria</label>
-<select id="categoria">
-  <option value="">Selecione</option>
-  <option value="Anime">Anime</option>
-  <option value="Biblico">Bíblico</option>
-  <option value="Curiosidades">Curiosidades</option>
-  <option value="Tecnologia">Tecnologia</option>
-</select>
+    <select id="categoria">
+      <option value="">Escolha a categoria</option>
+      <option value="anime">Anime</option>
+      <option value="biblico">Bíblico</option>
+      <option value="tecnologia">Tecnologia</option>
+      <option value="curiosidades">Curiosidades</option>
+    </select>
 
-<label>Tema do vídeo</label>
-<input id="tema" placeholder="Ex: Naruto, Apocalipse, IA, Espaço"/>
+    <input id="tema" type="text" placeholder="Ex: Naruto, Apocalipse, IA"/>
 
-<button id="btnGerar" onclick="gerar()">GERAR SHORT</button>
+    <button onclick="gerar()">GERAR SHORT</button>
 
-<div id="resultado"></div>
+    <div id="resultado"></div>
+  </div>
 
-<div class="info">⚠ Conteúdo focado em retenção, impacto e loop psicológico</div>
-</div>
-
-<script>
-const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gerar";
-
-async function gerar() {
-  const categoria = categoriaEl.value;
-  const tema = temaEl.value.trim();
-  const btn = document.getElementById("btnGerar");
-  const resultado = document.getElementById("resultado");
-
-  if(!categoria || !tema){
-    resultado.innerHTML = "⚠ Preencha categoria e tema.";
-    return;
-  }
-
-  btn.disabled = true;
-  btn.innerText = "GERANDO...";
-  resultado.innerHTML = "⏳ Criando roteiro viral...";
-
-  try {
-    const res = await fetch(WEBHOOK_URL,{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        categoria,
-        tema,
-        estilo:"short_dark_viral_58s"
-      })
-    });
-
-    const data = await res.json();
-
-    let roteiro =
-      data?.shorts?.[0]?.roteiro ||
-      data?.output?.[0]?.content?.[0]?.text;
-
-    if(!roteiro){
-      resultado.innerHTML = "⚠ Servidor respondeu, mas sem roteiro.";
-      console.log(data);
-      return;
-    }
-
-    resultado.innerHTML = `
-<pre>${roteiro}</pre>
-<button class="copy" onclick="copiar()">📋 COPIAR PARA CAPCUT</button>
-`;
-
-  } catch(e){
-    resultado.innerHTML = "❌ Erro ao conectar.";
-    console.error(e);
-  } finally {
-    btn.disabled = false;
-    btn.innerText = "GERAR SHORT";
-  }
-}
-
-function copiar(){
-  const texto = document.querySelector("pre").innerText;
-  navigator.clipboard.writeText(texto);
-  alert("Roteiro copiado!");
-}
-
-const categoriaEl = document.getElementById("categoria");
-const temaEl = document.getElementById("tema");
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
