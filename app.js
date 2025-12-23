@@ -1,54 +1,86 @@
+<script>
 const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gerar";
 
 async function gerar() {
   const categoria = document.getElementById("categoria").value;
   const tema = document.getElementById("tema").value.trim();
   const resultado = document.getElementById("resultado");
+  const botao = document.getElementById("btnGerar");
 
   if (!categoria || !tema) {
     resultado.innerHTML = "⚠️ Preencha categoria e tema.";
     return;
   }
 
+  botao.disabled = true;
+  botao.innerText = "GERANDO...";
   resultado.innerHTML = "⏳ Gerando roteiro dark...";
 
   try {
     const res = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        categoria,
-        tema: `
-Crie um SCRIPT SHORT DARK de 58 segundos.
-Formato EXATO:
-- SCENES numeradas
-- Texto curto na tela
-- Voz emocional
-- Ritmo rápido
-- Gancho nos primeiros 3 segundos
-- Loop psicológico no final
-Tema base: ${tema}
-`
-      })
+      body: JSON.stringify({ categoria, tema })
     });
 
     const data = await res.json();
 
-    if (!data.shorts || !data.shorts.length) {
+    let roteiro = null;
+
+    // ✅ FORMATO A
+    if (data?.shorts?.length && data.shorts[0].roteiro) {
+      roteiro = data.shorts[0].roteiro;
+    }
+
+    // ✅ FORMATO B
+    if (!roteiro && data?.output?.[0]?.content?.[0]?.text) {
+      roteiro = data.output[0].content[0].text;
+    }
+
+    if (!roteiro) {
       resultado.innerHTML = "⚠️ O servidor respondeu, mas sem roteiro.";
+      console.warn("Resposta recebida:", data);
       return;
     }
 
-    const roteiro = data.shorts[0].roteiro;
-
     resultado.innerHTML = `
-<pre style="white-space: pre-wrap; font-size:14px; line-height:1.6">
+<pre style="
+white-space: pre-wrap;
+background:#000;
+color:#fff;
+padding:16px;
+border-radius:8px;
+font-size:14px;
+line-height:1.6;
+">
 ${roteiro}
 </pre>
-    `;
+<button onclick="copiar()" style="
+margin-top:12px;
+padding:10px;
+width:100%;
+background:#e50914;
+color:white;
+border:none;
+border-radius:6px;
+font-weight:bold;
+">
+📋 COPIAR PARA CAPCUT
+</button>
+`;
 
   } catch (err) {
     console.error(err);
     resultado.innerHTML = "❌ Erro ao conectar com o servidor.";
+  } finally {
+    botao.disabled = false;
+    botao.innerText = "GERAR SHORTS";
   }
 }
+
+function copiar() {
+  const texto = document.querySelector("pre").innerText;
+  navigator.clipboard.writeText(texto);
+  alert("Roteiro copiado! 🎬");
+}
+</script>
