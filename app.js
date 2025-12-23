@@ -1,98 +1,98 @@
-// URL DO WEBHOOK n8n (produção)
 const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gerar";
 
 async function gerar() {
-  const categoria = document.getElementById("categoria").value;
-  const tema = document.getElementById("tema").value.trim();
-  const plataforma = document.getElementById("plataforma").value;
-  const duracao = document.getElementById("duracao").value;
-  const estilo = document.getElementById("estilo").value;
+  const categoria   = document.getElementById("categoria").value;
+  const tema        = document.getElementById("tema").value.trim();
+  const plataforma  = document.getElementById("plataforma")?.value || "YouTube Shorts";
+  const duracao     = document.getElementById("duracao")?.value || "15 segundos";
+  const estilo      = document.getElementById("estilo")?.value || "Épico";
 
   const resultado = document.getElementById("resultado");
-  const botao = document.getElementById("btnGerar");
+  const botao     = document.getElementById("btnGerar");
 
-  // Validação básica
+  // 🔒 Validação mínima
   if (!categoria || !tema) {
-    resultado.innerHTML = "⚠️ Preencha a categoria e o tema.";
+    resultado.innerHTML = "⚠️ Preencha CATEGORIA e TEMA.";
     return;
   }
 
-  // Feedback visual
   botao.disabled = true;
   botao.innerText = "GERANDO...";
-  resultado.innerHTML = "⏳ Gerando roteiro viral...";
+  resultado.innerHTML = "⏳ Criando roteiro viral aprovado pelo algoritmo...";
 
   try {
     const res = await fetch(WEBHOOK_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        categoria: categoria,
-        tema: tema,
-        plataforma: plataforma,
-        duracao: duracao,
-        estilo: estilo,
-        formato: "9:16"
+        categoria,
+        tema,
+        plataforma,
+        duracao,
+        estilo,
+
+        // 🔒 TRAVAS DE COMPORTAMENTO (NÃO REMOVER)
+        formato: "shorts",
+        orientacao: "vertical 9:16",
+        objetivo: "retenção máxima, viralidade, loop psicológico",
+        validarTema: true,
+        proibidoGenerico: true,
+        engine: "gepeto-viral-v1"
       })
     });
 
-    if (!res.ok) {
-      throw new Error("Resposta inválida do servidor");
-    }
-
     const data = await res.json();
-
     let roteiro = null;
 
-    // FORMATO PADRÃO DO SEU PIPELINE
+    // ✅ FORMATO PADRÃO DO GEPETO
     if (data?.shorts?.length && data.shorts[0].roteiro) {
       roteiro = data.shorts[0].roteiro;
     }
 
-    // FORMATO ALTERNATIVO (caso venha direto do model)
+    // ✅ FORMATO MESSAGE → MODEL (fallback)
     if (!roteiro && data?.output?.[0]?.content?.[0]?.text) {
       roteiro = data.output[0].content[0].text;
     }
 
-    if (!roteiro) {
-      resultado.innerHTML = "⚠️ A IA respondeu, mas não gerou roteiro.";
-      console.warn("Resposta recebida:", data);
+    if (!roteiro || roteiro.toLowerCase().includes("informe a categoria")) {
+      resultado.innerHTML = "⚠️ A IA não retornou roteiro válido para esse tema.";
+      console.warn("Resposta inválida:", data);
       return;
     }
 
-    // Renderização final (CapCut-friendly)
+    // ✅ Render final
     resultado.innerHTML = `
-      <div style="
-        background:#000;
-        color:#fff;
-        padding:16px;
-        border-radius:10px;
-        font-size:14px;
-        line-height:1.6;
-        white-space:pre-wrap;
-      ">
+<pre style="
+  white-space: pre-wrap;
+  background:#000;
+  color:#fff;
+  padding:16px;
+  border-radius:10px;
+  font-size:14px;
+  line-height:1.7;
+  border:1px solid #222;
+">
 ${roteiro}
-      </div>
+</pre>
 
-      <button onclick="copiarRoteiro()" style="
-        margin-top:12px;
-        padding:12px;
-        width:100%;
-        background:#e50914;
-        color:#fff;
-        border:none;
-        border-radius:8px;
-        font-weight:bold;
-        cursor:pointer;
-      ">
-        📋 COPIAR PARA CAPCUT
-      </button>
-    `;
+<button onclick="copiarRoteiro()" style="
+  margin-top:12px;
+  padding:14px;
+  width:100%;
+  background:#e50914;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+">
+📋 COPIAR PARA CAPCUT / IA DE VÍDEO
+</button>
+`;
 
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     resultado.innerHTML = "❌ Erro ao conectar com o servidor.";
   } finally {
     botao.disabled = false;
@@ -100,8 +100,11 @@ ${roteiro}
   }
 }
 
+// 📋 Copiar roteiro
 function copiarRoteiro() {
-  const texto = document.querySelector("#resultado div").innerText;
-  navigator.clipboard.writeText(texto);
-  alert("Roteiro copiado! 🎬");
+  const pre = document.querySelector("#resultado pre");
+  if (!pre) return;
+
+  navigator.clipboard.writeText(pre.innerText);
+  alert("Roteiro copiado! 🎬🔥");
 }
