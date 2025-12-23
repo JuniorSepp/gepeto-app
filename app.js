@@ -1,101 +1,54 @@
-// ===============================
-// CONFIG
-// ===============================
 const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gerar";
 
-// ===============================
-// FUNÇÃO PRINCIPAL
-// ===============================
 async function gerar() {
-  const categoriaEl = document.getElementById("categoria");
-  const temaEl = document.getElementById("tema");
-  const resultadoEl = document.getElementById("resultado");
-
-  // Segurança básica
-  if (!categoriaEl || !temaEl || !resultadoEl) {
-    alert("Erro: elementos da página não encontrados.");
-    return;
-  }
-
-  const categoria = categoriaEl.value;
-  const tema = temaEl.value.trim();
-
-  // Feedback visual
-  resultadoEl.innerHTML = "⏳ Gerando roteiro...";
+  const categoria = document.getElementById("categoria").value;
+  const tema = document.getElementById("tema").value.trim();
+  const resultado = document.getElementById("resultado");
 
   if (!categoria || !tema) {
-    resultadoEl.innerHTML = "⚠️ Preencha categoria e tema.";
+    resultado.innerHTML = "⚠️ Preencha categoria e tema.";
     return;
   }
 
+  resultado.innerHTML = "⏳ Gerando roteiro dark...";
+
   try {
-    // ===============================
-    // REQUEST
-    // ===============================
-    const response = await fetch(WEBHOOK_URL, {
+    const res = await fetch(WEBHOOK_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         categoria,
-        tema
+        tema: `
+Crie um SCRIPT SHORT DARK de 58 segundos.
+Formato EXATO:
+- SCENES numeradas
+- Texto curto na tela
+- Voz emocional
+- Ritmo rápido
+- Gancho nos primeiros 3 segundos
+- Loop psicológico no final
+Tema base: ${tema}
+`
       })
     });
 
-    if (!response.ok) {
-      throw new Error("Erro HTTP: " + response.status);
-    }
+    const data = await res.json();
 
-    const data = await response.json();
-
-    // ===============================
-    // TRATAMENTO DO RETORNO
-    // ===============================
-    /*
-      Esperado:
-      {
-        status: "ok",
-        categoria: "...",
-        tema: "...",
-        shorts: [
-          {
-            titulo: "...",
-            roteiro: "..."
-          }
-        ]
-      }
-    */
-
-    if (!data || !data.shorts || !Array.isArray(data.shorts)) {
-      resultadoEl.innerHTML = "⚠️ Resposta inválida do servidor.";
+    if (!data.shorts || !data.shorts.length) {
+      resultado.innerHTML = "⚠️ O servidor respondeu, mas sem roteiro.";
       return;
     }
 
-    if (data.shorts.length === 0) {
-      resultadoEl.innerHTML = "⚠️ Nenhum short retornado.";
-      return;
-    }
+    const roteiro = data.shorts[0].roteiro;
 
-    const short = data.shorts[0];
-    const roteiro = short.roteiro || "Sem roteiro.";
-
-    // ===============================
-    // RENDER
-    // ===============================
-    resultadoEl.innerHTML = `
-      <pre style="
-        background:#111;
-        color:#fff;
-        padding:16px;
-        border-radius:8px;
-        white-space:pre-wrap;
-        line-height:1.5;
-      ">${roteiro}</pre>
+    resultado.innerHTML = `
+<pre style="white-space: pre-wrap; font-size:14px; line-height:1.6">
+${roteiro}
+</pre>
     `;
 
-  } catch (erro) {
-    console.error("Erro:", erro);
-    resultadoEl.innerHTML = "❌ Erro ao conectar com o servidor.";
+  } catch (err) {
+    console.error(err);
+    resultado.innerHTML = "❌ Erro ao conectar com o servidor.";
   }
 }
