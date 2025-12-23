@@ -2,46 +2,64 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
   <title>Gepeto Shorts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    select, input, button {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: #e6002d;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    pre {
+      background: #111;
+      padding: 12px;
+      white-space: pre-wrap;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 
 <body>
-  <div class="app">
-    <h1>🎬 Gepeto Shorts</h1>
-    <p>Crie roteiros curtos e virais</p>
 
-    <!-- CATEGORIA -->
-    <select id="categoria">
-      <option value="biblico">Bíblico</option>
-      <option value="anime">Anime</option>
-      <option value="curiosidades">Curiosidades</option>
-      <option value="noticias">Notícias</option>
-    </select>
+  <h1>🎬 Gepeto Shorts</h1>
+  <p>Crie roteiros curtos e virais</p>
 
-    <!-- TEMA -->
-    <input
-      id="tema"
-      type="text"
-      placeholder="Digite o tema (ex: Naruto)"
-    />
+  <select id="categoria">
+    <option value="">Selecione a categoria</option>
+    <option value="biblico">Bíblico</option>
+    <option value="anime">Anime</option>
+    <option value="curiosidades">Curiosidades</option>
+    <option value="noticias">Notícias</option>
+  </select>
 
-    <!-- BOTÃO -->
-    <button onclick="gerar()">GERAR SHORTS</button>
+  <input id="tema" placeholder="Digite o tema (ex: Deus)" />
 
-    <!-- RESULTADO (CORREÇÃO CRÍTICA) -->
-    <!-- ❌ NÃO USAR <pre> -->
-    <!-- ✅ USAR <div> -->
-    <div id="resultado"></div>
-  </div>
+  <!-- ⚠️ BOTÃO CHAMANDO GERAR() -->
+  <button onclick="gerar()">GERAR SHORTS</button>
 
-  <!-- JS -->
+  <div id="resultado"></div>
+
+  <!-- ⚠️ SCRIPT NO FINAL -->
   <script src="app.js"></script>
+
 </body>
 </html>
