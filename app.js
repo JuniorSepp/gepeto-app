@@ -1,125 +1,59 @@
-import { useState } from "react";
+async function gerar() {
+  const categoria = document.getElementById("categoria").value;
+  const tema = document.getElementById("tema").value;
+  const resultado = document.getElementById("resultado");
 
-export default function App() {
-  const [categoria, setCategoria] = useState("bíblico");
-  const [tema, setTema] = useState("");
-  const [resultado, setResultado] = useState([]);
-  const [erro, setErro] = useState("");
-  const [loading, setLoading] = useState(false);
+  resultado.innerHTML = "⏳ Gerando conteúdo...";
 
-  async function gerarShorts() {
-    setErro("");
-    setResultado([]);
-    setLoading(true);
+  try {
+    const res = await fetch("https://wjr.app.n8n.cloud/webhook/gepeto", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ categoria, tema })
+    });
 
-    try {
-      const response = await fetch(
-        "https://wjr.app.n8n.cloud/webhook/gerar",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            categoria,
-            tema,
-          }),
-        }
-      );
+    const data = await res.json();
 
-      if (!response.ok) {
-        throw new Error("Erro na API");
-      }
+    const texto = data.output[0].content[0].text;
 
-      const data = await response.json();
+    // separa blocos do prompt
+    const roteiro = texto.split("THUMBNAIL_TEXTO:")[0]
+      .replace("ROTEIRO:", "").trim();
 
-      if (!data.shorts) {
-        throw new Error("Resposta inválida");
-      }
+    const thumbTexto = texto.split("THUMBNAIL_TEXTO:")[1]
+      .split("THUMBNAIL_EMOÇÃO:")[0].trim();
 
-      setResultado(data.shorts);
-    } catch (e) {
-      setErro("Erro ao gerar conteúdo.");
-    } finally {
-      setLoading(false);
-    }
+    const thumbEmocao = texto.split("THUMBNAIL_EMOÇÃO:")[1]
+      .split("THUMBNAIL_VISUAL:")[0].trim();
+
+    const thumbVisual = texto.split("THUMBNAIL_VISUAL:")[1].trim();
+
+    resultado.innerHTML = `
+      <h3>🎬 ROTEIRO</h3>
+      <pre>${roteiro}</pre>
+      <button onclick="copiar(\`${roteiro}\`)">📋 Copiar roteiro</button>
+
+      <h3>🖼️ THUMBNAIL – TEXTO</h3>
+      <pre>${thumbTexto}</pre>
+      <button onclick="copiar(\`${thumbTexto}\`)">📋 Copiar</button>
+
+      <h3>🎭 EMOÇÃO</h3>
+      <pre>${thumbEmocao}</pre>
+      <button onclick="copiar(\`${thumbEmocao}\`)">📋 Copiar</button>
+
+      <h3>🎨 DESCRIÇÃO VISUAL</h3>
+      <pre>${thumbVisual}</pre>
+      <button onclick="copiar(\`${thumbVisual}\`)">📋 Copiar</button>
+    `;
+
+  } catch (e) {
+    resultado.innerHTML = "❌ Erro ao gerar conteúdo.";
   }
-
-  return (
-    <div style={styles.container}>
-      <h1>🎬 Gepeto Shorts</h1>
-      <p>Crie roteiros curtos e virais</p>
-
-      <select
-        value={categoria}
-        onChange={(e) => setCategoria(e.target.value)}
-        style={styles.input}
-      >
-        <option value="bíblico">Bíblico</option>
-        <option value="anime">Anime</option>
-        <option value="curiosidades">Curiosidades</option>
-        <option value="notícias">Notícias</option>
-      </select>
-
-      <input
-        style={styles.input}
-        placeholder="Tema"
-        value={tema}
-        onChange={(e) => setTema(e.target.value)}
-      />
-
-      <button onClick={gerarShorts} style={styles.button}>
-        {loading ? "Gerando..." : "GERAR SHORTS"}
-      </button>
-
-      {erro && <p style={styles.error}>❌ {erro}</p>}
-
-      {resultado.map((item, index) => (
-        <div key={index} style={styles.card}>
-          <h3>{item.titulo}</h3>
-          <p>{item.roteiro}</p>
-        </div>
-      ))}
-    </div>
-  );
 }
 
-const styles = {
-  container: {
-    background: "#0f0f0f",
-    color: "#fff",
-    minHeight: "100vh",
-    padding: 20,
-    textAlign: "center",
-    fontFamily: "Arial",
-  },
-  input: {
-    width: "100%",
-    padding: 12,
-    marginBottom: 10,
-    borderRadius: 8,
-    border: "none",
-    fontSize: 16,
-  },
-  button: {
-    width: "100%",
-    padding: 14,
-    background: "#ff0050",
-    color: "#fff",
-    border: "none",
-    borderRadius: 8,
-    fontSize: 18,
-    cursor: "pointer",
-  },
-  card: {
-    background: "#1c1c1c",
-    padding: 15,
-    marginTop: 15,
-    borderRadius: 10,
-    textAlign: "left",
-  },
-  error: {
-    marginTop: 10,
-    color: "#ff4d4d",
-  },
-};
+function copiar(texto) {
+  navigator.clipboard.writeText(texto);
+  alert("Copiado!");
+}
