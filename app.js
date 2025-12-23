@@ -3,7 +3,6 @@ async function gerar() {
   const tema = document.getElementById("tema").value;
   const resultado = document.getElementById("resultado");
 
-  // Feedback visual
   resultado.innerHTML = "⏳ Gerando roteiro...";
 
   try {
@@ -11,19 +10,13 @@ async function gerar() {
       "https://wjr.app.n8n.cloud/webhook/gerar",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          categoria,
-          tema
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ categoria, tema })
       }
     );
 
     const data = await response.json();
 
-    // Validação de segurança
     if (
       !data ||
       !data.shorts ||
@@ -34,65 +27,65 @@ async function gerar() {
       return;
     }
 
-    // Texto bruto vindo da IA
-    const texto = String(data.shorts[0].roteiro);
+    const texto = data.shorts[0].roteiro;
 
-    // Extrações seguras
-    const roteiro = texto
-      .split("THUMBNAIL_TEXTO:")[0]
-      .replace("ROTEIRO:", "")
-      .trim();
+    // Divide os shorts
+    const shorts = texto.split("SHORT ").slice(1);
 
-    const thumbnailTexto = texto.includes("THUMBNAIL_TEXTO:")
-      ? texto.split("THUMBNAIL_TEXTO:")[1].split("THUMBNAIL_EMOÇÃO:")[0].trim()
-      : "";
+    let html = "";
 
-    const thumbnailEmocao = texto.includes("THUMBNAIL_EMOÇÃO:")
-      ? texto.split("THUMBNAIL_EMOÇÃO:")[1].split("THUMBNAIL_VISUAL:")[0].trim()
-      : "";
+    shorts.forEach((shortText, index) => {
+      const roteiro = extrair(shortText, "ROTEIRO:", "SCRIPT_CAPCUT:");
+      const capcut = extrair(shortText, "SCRIPT_CAPCUT:", "THUMBNAIL_TEXTO:");
+      const thumbTexto = extrair(shortText, "THUMBNAIL_TEXTO:", "THUMBNAIL_EMOÇÃO:");
+      const emocao = extrair(shortText, "THUMBNAIL_EMOÇÃO:", "THUMBNAIL_VISUAL:");
+      const visual = extrair(shortText, "THUMBNAIL_VISUAL:", null);
 
-    const thumbnailVisual = texto.includes("THUMBNAIL_VISUAL:")
-      ? texto.split("THUMBNAIL_VISUAL:")[1].trim()
-      : "";
+      html += `
+        <div class="card">
+          <h3>🎬 Short ${index + 1}</h3>
 
-    // Renderização FINAL
-    resultado.innerHTML = `
-      <div class="card">
-        <h3>${data.shorts[0].titulo}</h3>
+          <p><strong>Roteiro:</strong></p>
+          <p>${roteiro}</p>
 
-        <p><strong>🎬 Roteiro:</strong></p>
-        <p>${roteiro}</p>
+          <p><strong>Script CapCut:</strong></p>
+          <pre>${capcut}</pre>
+          <button onclick="copiarTexto(\`${capcut}\`)">📋 Copiar CapCut</button>
 
-        <hr>
+          <hr>
 
-        <p><strong>🖼️ Texto da Thumbnail:</strong></p>
-        <p>${thumbnailTexto}</p>
+          <p><strong>Thumbnail:</strong></p>
+          <p><strong>Texto:</strong> ${thumbTexto}</p>
+          <p><strong>Emoção:</strong> ${emocao}</p>
+          <p><strong>Prompt Visual:</strong></p>
+          <p>${visual}</p>
 
-        <p><strong>😱 Emoção:</strong></p>
-        <p>${thumbnailEmocao}</p>
+          <button onclick="copiarTexto(\`${visual}\`)">
+            📋 Copiar Prompt da Thumbnail
+          </button>
+        </div>
+      `;
+    });
 
-        <p><strong>🎨 Prompt Visual:</strong></p>
-        <p class="thumbnail-prompt">${thumbnailVisual}</p>
+    resultado.innerHTML = html;
 
-        <button onclick="copiarThumbnail()">📋 Copiar Prompt da Thumbnail</button>
-      </div>
-    `;
-
-  } catch (error) {
+  } catch (err) {
+    console.error(err);
     resultado.innerHTML = "❌ Erro de conexão com o servidor.";
-    console.error(error);
   }
 }
 
-// Função COMPLETA — não precisa adicionar nada
-function copiarThumbnail() {
-  const texto = document.querySelector(".thumbnail-prompt")?.innerText;
-
-  if (!texto) {
-    alert("Nenhum prompt de thumbnail encontrado.");
-    return;
+// Funções auxiliares
+function extrair(texto, inicio, fim) {
+  if (!texto.includes(inicio)) return "";
+  let parte = texto.split(inicio)[1];
+  if (fim && parte.includes(fim)) {
+    parte = parte.split(fim)[0];
   }
+  return parte.trim();
+}
 
+function copiarTexto(texto) {
   navigator.clipboard.writeText(texto);
-  alert("Prompt da thumbnail copiado!");
+  alert("Copiado!");
 }
