@@ -10,42 +10,50 @@ async function gerar() {
       "https://wjr.app.n8n.cloud/webhook/gerar",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({ categoria, tema })
       }
     );
 
     const data = await response.json();
-    console.log("DEBUG:", data); // 👈 IMPORTANTE
+    console.log("RESPOSTA DA API:", data);
 
-    const short = data?.shorts?.[0];
-    const texto = short?.roteiro;
-
-    if (!texto) {
-      resultado.innerHTML =
-        "⚠️ O servidor respondeu, mas não retornou texto.";
+    if (
+      !data ||
+      !data.shorts ||
+      !data.shorts[0] ||
+      !data.shorts[0].roteiro
+    ) {
+      resultado.innerHTML = "❌ Roteiro não retornado pela API.";
       return;
     }
 
-    // Quebra o conteúdo
+    const texto = data.shorts[0].roteiro;
+
+    // Quebra o texto em partes
     const roteiro = texto.split("THUMBNAIL_TEXTO:")[0]
       .replace("ROTEIRO:", "")
       .trim();
 
-    const thumbnailTexto =
-      texto.split("THUMBNAIL_TEXTO:")[1]?.split("THUMBNAIL_EMOÇÃO:")[0]?.trim() || "";
+    const thumbnailTexto = texto.includes("THUMBNAIL_TEXTO:")
+      ? texto.split("THUMBNAIL_TEXTO:")[1].split("THUMBNAIL_EMOÇÃO:")[0].trim()
+      : "";
 
-    const thumbnailEmocao =
-      texto.split("THUMBNAIL_EMOÇÃO:")[1]?.split("THUMBNAIL_VISUAL:")[0]?.trim() || "";
+    const thumbnailEmocao = texto.includes("THUMBNAIL_EMOÇÃO:")
+      ? texto.split("THUMBNAIL_EMOÇÃO:")[1].split("THUMBNAIL_VISUAL:")[0].trim()
+      : "";
 
-    const thumbnailVisual =
-      texto.split("THUMBNAIL_VISUAL:")[1]?.trim() || "";
+    const thumbnailVisual = texto.includes("THUMBNAIL_VISUAL:")
+      ? texto.split("THUMBNAIL_VISUAL:")[1].trim()
+      : "";
 
     resultado.innerHTML = `
       <div class="card">
-        <h3>${short.titulo}</h3>
+        <h3>🎬 ${data.shorts[0].titulo}</h3>
 
-        <p><strong>🎬 Roteiro:</strong></p>
+        <p><strong>Roteiro:</strong></p>
         <p>${roteiro}</p>
 
         <hr>
@@ -62,9 +70,9 @@ async function gerar() {
         <button onclick="copiarThumbnail()">📋 Copiar Prompt da Thumbnail</button>
       </div>
     `;
-  } catch (err) {
-    console.error(err);
-    resultado.innerHTML = "❌ Erro de conexão com o servidor.";
+  } catch (error) {
+    console.error(error);
+    resultado.innerHTML = "❌ Erro de conexão com a API.";
   }
 }
 
