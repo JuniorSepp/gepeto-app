@@ -16,76 +16,60 @@ async function gerar() {
     );
 
     const data = await response.json();
+    console.log("DEBUG:", data); // 👈 IMPORTANTE
 
-    if (
-      !data ||
-      !data.shorts ||
-      !data.shorts[0] ||
-      !data.shorts[0].roteiro
-    ) {
-      resultado.innerHTML = "⚠️ Erro ao gerar o roteiro.";
+    const short = data?.shorts?.[0];
+    const texto = short?.roteiro;
+
+    if (!texto) {
+      resultado.innerHTML =
+        "⚠️ O servidor respondeu, mas não retornou texto.";
       return;
     }
 
-    const texto = data.shorts[0].roteiro;
+    // Quebra o conteúdo
+    const roteiro = texto.split("THUMBNAIL_TEXTO:")[0]
+      .replace("ROTEIRO:", "")
+      .trim();
 
-    // Divide os shorts
-    const shorts = texto.split("SHORT ").slice(1);
+    const thumbnailTexto =
+      texto.split("THUMBNAIL_TEXTO:")[1]?.split("THUMBNAIL_EMOÇÃO:")[0]?.trim() || "";
 
-    let html = "";
+    const thumbnailEmocao =
+      texto.split("THUMBNAIL_EMOÇÃO:")[1]?.split("THUMBNAIL_VISUAL:")[0]?.trim() || "";
 
-    shorts.forEach((shortText, index) => {
-      const roteiro = extrair(shortText, "ROTEIRO:", "SCRIPT_CAPCUT:");
-      const capcut = extrair(shortText, "SCRIPT_CAPCUT:", "THUMBNAIL_TEXTO:");
-      const thumbTexto = extrair(shortText, "THUMBNAIL_TEXTO:", "THUMBNAIL_EMOÇÃO:");
-      const emocao = extrair(shortText, "THUMBNAIL_EMOÇÃO:", "THUMBNAIL_VISUAL:");
-      const visual = extrair(shortText, "THUMBNAIL_VISUAL:", null);
+    const thumbnailVisual =
+      texto.split("THUMBNAIL_VISUAL:")[1]?.trim() || "";
 
-      html += `
-        <div class="card">
-          <h3>🎬 Short ${index + 1}</h3>
+    resultado.innerHTML = `
+      <div class="card">
+        <h3>${short.titulo}</h3>
 
-          <p><strong>Roteiro:</strong></p>
-          <p>${roteiro}</p>
+        <p><strong>🎬 Roteiro:</strong></p>
+        <p>${roteiro}</p>
 
-          <p><strong>Script CapCut:</strong></p>
-          <pre>${capcut}</pre>
-          <button onclick="copiarTexto(\`${capcut}\`)">📋 Copiar CapCut</button>
+        <hr>
 
-          <hr>
+        <p><strong>🖼️ Texto da Thumbnail:</strong></p>
+        <p>${thumbnailTexto}</p>
 
-          <p><strong>Thumbnail:</strong></p>
-          <p><strong>Texto:</strong> ${thumbTexto}</p>
-          <p><strong>Emoção:</strong> ${emocao}</p>
-          <p><strong>Prompt Visual:</strong></p>
-          <p>${visual}</p>
+        <p><strong>😱 Emoção:</strong></p>
+        <p>${thumbnailEmocao}</p>
 
-          <button onclick="copiarTexto(\`${visual}\`)">
-            📋 Copiar Prompt da Thumbnail
-          </button>
-        </div>
-      `;
-    });
+        <p><strong>🎨 Prompt Visual:</strong></p>
+        <p id="thumbPrompt">${thumbnailVisual}</p>
 
-    resultado.innerHTML = html;
-
+        <button onclick="copiarThumbnail()">📋 Copiar Prompt da Thumbnail</button>
+      </div>
+    `;
   } catch (err) {
     console.error(err);
     resultado.innerHTML = "❌ Erro de conexão com o servidor.";
   }
 }
 
-// Funções auxiliares
-function extrair(texto, inicio, fim) {
-  if (!texto.includes(inicio)) return "";
-  let parte = texto.split(inicio)[1];
-  if (fim && parte.includes(fim)) {
-    parte = parte.split(fim)[0];
-  }
-  return parte.trim();
-}
-
-function copiarTexto(texto) {
+function copiarThumbnail() {
+  const texto = document.getElementById("thumbPrompt").innerText;
   navigator.clipboard.writeText(texto);
-  alert("Copiado!");
+  alert("Prompt da thumbnail copiado!");
 }
