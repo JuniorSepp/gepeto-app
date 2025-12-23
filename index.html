@@ -2,64 +2,123 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Gepeto Shorts</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gepeto Shorts</title>
 
   <style>
     body {
-      background: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
+      background: #0e0e0e;
+      color: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    select, input, button {
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #bbbbbb;
+      margin-bottom: 24px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #cccccc;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    select,
+    input {
       width: 100%;
       padding: 14px;
-      margin: 10px 0;
-      border-radius: 6px;
+      margin-bottom: 16px;
+      border-radius: 8px;
       border: none;
-      font-size: 16px;
+      outline: none;
+      background: #1e1e1e;
+      color: #ffffff;
+      font-size: 15px;
     }
 
     button {
-      background: #e6002d;
-      color: white;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #d6002f;
+      color: #ffffff;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    pre {
-      background: #111;
-      padding: 12px;
+    button:active {
+      opacity: 0.85;
+    }
+
+    #resultado {
+      margin-top: 24px;
+      padding: 16px;
+      background: #121212;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.6;
       white-space: pre-wrap;
-      border-radius: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+      margin-top: 24px;
     }
   </style>
 </head>
 
 <body>
+  <div class="container">
+    <h1>🎬 Gepeto Shorts</h1>
+    <div class="subtitle">Roteiros dark e virais para Shorts, Reels e TikTok</div>
 
-  <h1>🎬 Gepeto Shorts</h1>
-  <p>Crie roteiros curtos e virais</p>
+    <label for="categoria">Categoria</label>
+    <select id="categoria">
+      <option value="">Selecione</option>
+      <option value="dark">Dark</option>
+      <option value="biblico">Bíblico Dark</option>
+      <option value="motivacional">Motivacional</option>
+      <option value="curiosidades">Curiosidades</option>
+      <option value="anime">Anime</option>
+    </select>
 
-  <select id="categoria">
-    <option value="">Selecione a categoria</option>
-    <option value="biblico">Bíblico</option>
-    <option value="anime">Anime</option>
-    <option value="curiosidades">Curiosidades</option>
-    <option value="noticias">Notícias</option>
-  </select>
+    <label for="tema">Tema do vídeo</label>
+    <input
+      type="text"
+      id="tema"
+      placeholder="Ex: viver no automático, medo de mudar, acordar tarde demais"
+    />
 
-  <input id="tema" placeholder="Digite o tema (ex: Deus)" />
+    <button onclick="gerar()">GERAR SHORTS</button>
 
-  <!-- ⚠️ BOTÃO CHAMANDO GERAR() -->
-  <button onclick="gerar()">GERAR SHORTS</button>
+    <div id="resultado"></div>
 
-  <div id="resultado"></div>
+    <div class="footer">
+      ⚠️ Conteúdo otimizado para retenção e loop psicológico
+    </div>
+  </div>
 
-  <!-- ⚠️ SCRIPT NO FINAL -->
   <script src="app.js"></script>
-
 </body>
 </html>
