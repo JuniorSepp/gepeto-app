@@ -10,19 +10,48 @@
 <body>
   <div class="app">
     <h1>🎬 Gepeto Shorts</h1>
-    <p>Roteiros virais para YouTube Shorts</p>
+    <p>Roteiros virais aprovados pelo algoritmo</p>
 
+    <!-- Categoria -->
+    <label>Categoria</label>
     <select id="categoria">
       <option value="">Escolha a categoria</option>
-      <option value="anime">Anime</option>
-      <option value="biblico">Bíblico</option>
-      <option value="tecnologia">Tecnologia</option>
-      <option value="curiosidades">Curiosidades</option>
+      <option value="Anime">Anime</option>
+      <option value="Bíblico">Bíblico</option>
+      <option value="Tecnologia">Tecnologia</option>
+      <option value="Curiosidades">Curiosidades</option>
     </select>
 
-    <input id="tema" type="text" placeholder="Ex: Naruto, Apocalipse, IA"/>
+    <!-- Tema -->
+    <label>Tema do vídeo</label>
+    <input id="tema" type="text" placeholder="Ex: Naruto vs Samurai X"/>
 
-    <button onclick="gerar()">GERAR SHORT</button>
+    <!-- Tipo de vídeo -->
+    <label>Plataforma</label>
+    <select id="plataforma">
+      <option value="YouTube Shorts">YouTube Shorts</option>
+      <option value="Instagram Reels">Instagram Reels</option>
+      <option value="TikTok">TikTok</option>
+    </select>
+
+    <!-- Duração -->
+    <label>Duração</label>
+    <select id="duracao">
+      <option value="15s">15 segundos</option>
+      <option value="30s">30 segundos</option>
+      <option value="58s" selected>58 segundos (viral)</option>
+    </select>
+
+    <!-- Estilo -->
+    <label>Estilo do vídeo</label>
+    <select id="estilo">
+      <option value="Dark Viral">Dark Viral</option>
+      <option value="Épico">Épico</option>
+      <option value="Inspirador">Inspirador</option>
+      <option value="Solene">Solene</option>
+    </select>
+
+    <button id="btnGerar" onclick="gerar()">GERAR VÍDEO</button>
 
     <div id="resultado"></div>
   </div>
