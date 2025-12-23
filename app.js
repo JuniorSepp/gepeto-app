@@ -1,76 +1,94 @@
-async function gerarShorts() {
-  const categoria = document.getElementById("categoria").value;
-  const tema = document.getElementById("tema").value;
-  const resultado = document.getElementById("resultado");
+// ===== CONFIG =====
+const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gerar";
 
-  if (!categoria || !tema) {
-    resultado.innerHTML = "⚠️ Preencha categoria e tema.";
+// ===== FUNÇÃO PRINCIPAL (CHAMADA PELO BOTÃO) =====
+async function gerar() {
+  const categoria = document.getElementById("categoria").value;
+  const tema = document.getElementById("tema").value.trim();
+  const output = document.getElementById("resultado");
+
+  // Limpa tela
+  output.innerHTML = "⏳ Gerando roteiro...";
+
+  // Validação
+  if (!categoria) {
+    output.innerHTML = "⚠️ Categoria não selecionada.";
     return;
   }
 
-  resultado.innerHTML = "⏳ Gerando roteiro...";
+  if (!tema) {
+    output.innerHTML = "⚠️ Tema não preenchido.";
+    return;
+  }
 
   try {
-    const response = await fetch(
-      "https://wjr.app.n8n.cloud/webhook/gerar",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ categoria, tema }),
-      }
-    );
+    // ===== REQUEST =====
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ categoria, tema })
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro na resposta do servidor");
+    }
 
     const data = await response.json();
 
-    const texto = data?.shorts?.[0]?.roteiro;
-
-    if (!texto) {
-      resultado.innerHTML =
-        "⚠️ O servidor respondeu, mas não retornou roteiro.";
+    // ===== SEGURANÇA =====
+    if (!data.shorts || !data.shorts.length) {
+      output.innerHTML = "⚠️ O servidor respondeu, mas não retornou shorts.";
       return;
     }
 
-    // Separação dos blocos
-    const roteiro = texto.split("THUMBNAIL_TEXTO:")[0]
-      .replace("ROTEIRO:", "")
-      .trim();
+    const short = data.shorts[0];
+    const texto = short.roteiro || "";
 
-    const thumbnailTexto = texto.split("THUMBNAIL_TEXTO:")[1]
-      .split("THUMBNAIL_EMOÇÃO:")[0]
-      .trim();
+    // ===== PARSER =====
+    const roteiro = extrair(texto, "ROTEIRO:");
+    const thumbTexto = extrair(texto, "THUMBNAIL_TEXTO:");
+    const emocao = extrair(texto, "THUMBNAIL_EMOÇÃO:");
+    const visual = extrair(texto, "THUMBNAIL_VISUAL:");
 
-    const thumbnailEmocao = texto.split("THUMBNAIL_EMOÇÃO:")[1]
-      .split("THUMBNAIL_VISUAL:")[0]
-      .trim();
+    // ===== RENDER =====
+    output.innerHTML = `
+      <h2>🎬 Roteiro</h2>
+      <pre>${roteiro}</pre>
 
-    const thumbnailVisual = texto.split("THUMBNAIL_VISUAL:")[1]
-      .trim();
+      <h2>🖼️ Texto da Thumbnail</h2>
+      <pre>${thumbTexto}</pre>
 
-    resultado.innerHTML = `
-      <h3>🎬 Roteiro</h3>
-      <p>${roteiro}</p>
+      <h2>😱 Emoção</h2>
+      <pre>${emocao}</pre>
 
-      <h3>🖼️ Texto da Thumbnail</h3>
-      <p><strong>${thumbnailTexto}</strong></p>
-
-      <h3>😱 Emoção</h3>
-      <p>${thumbnailEmocao}</p>
-
-      <h3>🎨 Prompt Visual</h3>
-      <p>${thumbnailVisual}</p>
+      <h2>🎨 Prompt Visual</h2>
+      <pre id="prompt">${visual}</pre>
 
       <button onclick="copiarPrompt()">📋 Copiar Prompt da Thumbnail</button>
     `;
 
-    window.promptThumbnail = thumbnailVisual;
-
   } catch (err) {
-    resultado.innerHTML = "❌ Erro ao conectar com o servidor.";
+    output.innerHTML = "❌ Erro ao gerar conteúdo.";
     console.error(err);
   }
 }
 
+// ===== FUNÇÃO AUXILIAR: EXTRAI BLOCOS =====
+function extrair(texto, chave) {
+  const inicio = texto.indexOf(chave);
+  if (inicio === -1) return "—";
+
+  const corte = texto.substring(inicio + chave.length);
+  const fim = corte.search(/\n[A-Z_]+:/);
+
+  return fim === -1
+    ? corte.trim()
+    : corte.substring(0, fim).trim();
+}
+
+// ===== COPIAR PROMPT =====
 function copiarPrompt() {
-  navigator.clipboard.writeText(window.promptThumbnail || "");
+  const texto = document.getElementById("prompt").innerText;
+  navigator.clipboard.writeText(texto);
   alert("Prompt copiado!");
 }
