@@ -1,21 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teste Botão</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gepeto Shorts</title>
+  <style>
+    body {
+      background:#000;
+      color:#fff;
+      font-family: Arial, sans-serif;
+      padding:20px;
+    }
+    select, input, button {
+      width:100%;
+      padding:12px;
+      margin:10px 0;
+      border-radius:6px;
+      border:none;
+      font-size:16px;
+    }
+    button {
+      background:#e50914;
+      color:#fff;
+      font-weight:bold;
+    }
+    #resultado {
+      margin-top:20px;
+    }
+  </style>
 </head>
 
-<body style="background:black;color:white;padding:40px;font-size:20px;">
+<body>
 
-<button onclick="teste()">CLIQUE AQUI</button>
+<h2>🎬 Gepeto Shorts</h2>
 
-<script>
-function teste() {
-  alert("FUNCIONOU");
-  console.log("BOTÃO FUNCIONANDO");
-}
-</script>
+<select id="categoria">
+  <option value="">Categoria</option>
+  <option value="Anime">Anime</option>
+  <option value="Tecnologia">Tecnologia</option>
+  <option value="Bíblico">Bíblico</option>
+</select>
 
+<input id="tema" placeholder="Tema do vídeo"/>
+
+<select id="plataforma">
+  <option value="YouTube Shorts">YouTube Shorts</option>
+  <option value="Instagram Reels">Instagram Reels</option>
+</select>
+
+<select id="duracao">
+  <option value="15 segundos">15 segundos</option>
+  <option value="30 segundos">30 segundos</option>
+  <option value="58 segundos">58 segundos</option>
+</select>
+
+<select id="estilo">
+  <option value="Épico">Épico</option>
+  <option value="Dark Viral">Dark Viral</option>
+  <option value="Inspirador">Inspirador</option>
+</select>
+
+<button onclick="gerar()">GERAR SHORT</button>
+
+<div id="resultado"></div>
+
+<script src="app.js"></script>
 </body>
 </html>
