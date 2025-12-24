@@ -1,79 +1,64 @@
-const API_KEY = "SUA_API_KEY_AQUI"; // OpenAI ou compatível
-
-async function gerar() {
+function gerar() {
   const tema = document.getElementById("tema").value.trim();
-  const plataforma = document.getElementById("plataforma").value;
-  const estilo = document.getElementById("estilo").value;
-  const duracao = document.getElementById("duracao").value;
-
   const resultado = document.getElementById("resultado");
-  const botao = document.getElementById("btnGerar");
 
   if (!tema) {
-    resultado.innerText = "⚠️ Digite uma ideia ou tema.";
+    resultado.innerHTML = "⚠️ Digite um tema.";
     return;
   }
 
-  botao.disabled = true;
-  botao.innerText = "GERANDO...";
-  resultado.innerText = "⏳ Criando roteiro viral...";
+  resultado.innerHTML = "⏳ Gerando roteiro viral...";
 
-  const prompt = `
-Você é um especialista em conteúdo viral para vídeos curtos.
+  // SIMULA IA LOCAL (SEM N8N / SEM API)
+  const roteiro = `
+ROTEIRO VIRAL – 58s
 
-TEMA: ${tema}
-PLATAFORMA: ${plataforma}
-ESTILO: ${estilo}
-DURAÇÃO: ${duracao}
+GANCHO (0–3s):
+"${tema}… e quase ninguém percebe isso."
 
-REGRAS:
-- NÃO pedir informações
-- NÃO sair do tema
-- NÃO usar frases genéricas
-- Gancho forte nos primeiros 2s
-- Texto pronto para CapCut / IA de vídeo
-- Criar loop psicológico
+QUEBRA DE PADRÃO (3–7s):
+"Isso muda completamente a forma como você vê isso."
 
-FORMATO DE SAÍDA (texto corrido, sem cenas):
+DESENVOLVIMENTO:
+"${tema} parece comum, mas existe um detalhe que passa despercebido pela maioria.
+E é exatamente isso que prende sua atenção sem você notar."
 
-ROTEIRO_VIRAL:
-CAPCUT_PROMPT:
-RETENCAO_HOOK:
-LOOP_FINAL:
+LOOP FINAL:
+"Agora volta pro início e repara no detalhe que você ignorou."
+
 THUMBNAIL:
-TEXTO:
-EMOÇÃO:
-VISUAL:
+TEXTO: ${tema.toUpperCase()}
+EMOÇÃO: Curiosidade
+VISUAL: Close no rosto com expressão de choque, fundo escuro, alto contraste
 `;
 
-  try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + API_KEY
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.9
-      })
-    });
+  resultado.innerHTML = `
+    <pre style="
+      white-space: pre-wrap;
+      background:#000;
+      color:#fff;
+      padding:16px;
+      border-radius:8px;
+      line-height:1.6;
+    ">${roteiro}</pre>
 
-    const data = await res.json();
-    const texto = data.choices?.[0]?.message?.content;
+    <button onclick="copiar()" style="
+      margin-top:12px;
+      padding:12px;
+      width:100%;
+      background:#e50914;
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      font-weight:bold;
+    ">
+      📋 COPIAR ROTEIRO
+    </button>
+  `;
+}
 
-    if (!texto) {
-      resultado.innerText = "❌ Erro ao gerar roteiro.";
-    } else {
-      resultado.innerText = texto;
-    }
-
-  } catch (e) {
-    resultado.innerText = "❌ Erro de conexão.";
-    console.error(e);
-  } finally {
-    botao.disabled = false;
-    botao.innerText = "GERAR ROTEIRO";
-  }
+function copiar() {
+  const texto = document.querySelector("pre").innerText;
+  navigator.clipboard.writeText(texto);
+  alert("Roteiro copiado!");
 }
