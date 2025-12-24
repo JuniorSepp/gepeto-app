@@ -15,9 +15,13 @@ async function gerar() {
 
   botao.disabled = true;
   botao.innerText = "GERANDO...";
-  resultado.innerHTML = "⏳ Gerando roteiro viral...";
+  resultado.innerHTML = "⏳ Conectando ao servidor...";
 
   try {
+    console.log("Enviando para webhook:", {
+      tema, plataforma, duracao, estilo
+    });
+
     const response = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -29,23 +33,20 @@ async function gerar() {
       })
     });
 
+    if (!response.ok) {
+      throw new Error("Servidor respondeu com erro");
+    }
+
     const data = await response.json();
+    console.log("Resposta do servidor:", data);
 
-    let texto = null;
-
-    // FORMATO PADRÃO DO N8N
-    if (data?.shorts?.[0]?.roteiro) {
-      texto = data.shorts[0].roteiro;
-    }
-
-    // FORMATO ALTERNATIVO (Message a Model)
-    if (!texto && data?.output?.[0]?.content?.[0]?.text) {
-      texto = data.output[0].content[0].text;
-    }
+    const texto =
+      data?.roteiro ||
+      data?.shorts?.[0]?.roteiro ||
+      data?.output?.[0]?.content?.[0]?.text;
 
     if (!texto) {
-      resultado.innerHTML = "⚠️ A IA respondeu, mas não gerou roteiro.";
-      console.warn(data);
+      resultado.innerHTML = "⚠️ Servidor respondeu, mas sem roteiro.";
       return;
     }
 
@@ -54,7 +55,7 @@ async function gerar() {
       <button onclick="copiar()">📋 COPIAR PARA CAPCUT</button>
     `;
   } catch (err) {
-    console.error(err);
+    console.error("ERRO REAL:", err);
     resultado.innerHTML = "❌ Erro ao conectar com o servidor.";
   } finally {
     botao.disabled = false;
@@ -65,5 +66,5 @@ async function gerar() {
 function copiar() {
   const texto = document.querySelector("pre").innerText;
   navigator.clipboard.writeText(texto);
-  alert("Roteiro copiado! 🎬");
+  alert("Roteiro copiado!");
 }
