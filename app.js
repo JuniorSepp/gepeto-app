@@ -1,70 +1,54 @@
-async function gerarShort() {
+// GARANTE QUE O JS CARREGOU
+console.log("✅ app.js carregado");
+
+// FUNÇÃO GLOBAL (OBRIGATÓRIO)
+window.gerarShort = function () {
+
   const tema = document.getElementById("tema").value.trim();
   const plataforma = document.getElementById("plataforma").value;
   const duracao = document.getElementById("duracao").value;
   const estilo = document.getElementById("estilo").value;
+  const resultado = document.getElementById("resultado");
 
-  const output = document.getElementById("output");
-  output.innerText = "Gerando roteiro...";
-
-  if (!tema || !plataforma || !duracao || !estilo) {
-    output.innerText = "Preencha todos os campos.";
+  // VALIDAÇÃO SIMPLES
+  if (!tema) {
+    resultado.innerText = "❌ Digite um tema para gerar o roteiro.";
     return;
   }
 
-  const prompt = `
-Você é um estrategista profissional de conteúdo viral para vídeos verticais.
-
-Crie um roteiro EXTREMAMENTE envolvente, emocional e otimizado para retenção nos primeiros 3 segundos.
-
-DADOS:
-TEMA: ${tema}
-PLATAFORMA: ${plataforma}
-DURAÇÃO: ${duracao}
-ESTILO: ${estilo}
-
-REGRAS:
-- Não faça perguntas
-- Não explique o que está fazendo
-- Não use linguagem genérica
-- Pense como algoritmo, não como escritor
-
-FORMATO FIXO DE SAÍDA:
-
+  // ROTEIRO GERADO
+  const roteiro = `
 VIDEO_SCRIPT:
-CENA 1 (0-3s):
-CENA 2:
-CENA FINAL:
 
-RETENCAO_HOOK:
-LOOP_FINAL:
+[CENA 1 | 0–3s]
+Voz: "Isso não é coincidência…"
+Texto na tela: "${tema.toUpperCase()}"
+
+[CENA 2 | 3–${duracao}]
+Voz: "${estilo === "Bíblico" ? "A Bíblia já alertava sobre isso…" : "Poucos percebem esse detalhe…"}"
+Texto: "Observe com atenção."
+
+[CENA FINAL]
+Voz: "Agora volta e repara nesse detalhe."
 
 CAPCUT_PROMPT:
+Formato ${plataforma}, vertical 9:16,
+duração ${duracao},
+estilo ${estilo},
+cortes rápidos, zoom leve, música emocional.
+
+RETENCAO_HOOK:
+"Isso não é coincidência…"
+
+LOOP_FINAL:
+"Agora volta e repara nesse detalhe."
 
 THUMBNAIL:
-TEXTO:
-EMOÇÃO:
-VISUAL:
+TEXTO: ${tema.toUpperCase()}
+EMOÇÃO: Impacto
+VISUAL: Close dramático
 `;
 
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer SUA_API_KEY"
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.85
-      })
-    });
-
-    const data = await response.json();
-    output.innerText = data.choices[0].message.content;
-
-  } catch (err) {
-    output.innerText = "Erro ao gerar roteiro.";
-  }
-}
+  // EXIBE RESULTADO
+  resultado.innerText = roteiro;
+};
