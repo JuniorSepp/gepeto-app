@@ -1,86 +1,89 @@
 function gerar() {
-  const tema = document.getElementById("tema").value.trim();
-  const plataforma = document.getElementById("plataforma").value;
-  const duracao = document.getElementById("duracao").value;
-  const estilo = document.getElementById("estilo").value;
+  try {
+    const tema = document.getElementById("tema").value.trim();
+    const plataforma = document.getElementById("plataforma").value;
+    const duracao = document.getElementById("duracao").value;
+    const estilo = document.getElementById("estilo").value;
 
-  const resultado = document.getElementById("resultado");
-  const btnCopiar = document.getElementById("copiar");
+    const resultado = document.getElementById("resultado");
+    const copiarBtn = document.getElementById("copiar");
 
-  if (!tema) {
-    resultado.textContent = "⚠️ Digite um tema para o vídeo.";
-    btnCopiar.style.display = "none";
-    return;
+    if (!tema) {
+      resultado.innerText = "⚠️ Digite um tema para gerar o roteiro.";
+      copiarBtn.style.display = "none";
+      return;
+    }
+
+    const roteiro = gerarRoteiroLocal(tema, plataforma, duracao, estilo);
+
+    resultado.innerText = roteiro;
+    copiarBtn.style.display = "block";
+  } catch (e) {
+    document.getElementById("resultado").innerText =
+      "❌ Erro ao gerar roteiro. Verifique o app.js.";
+    console.error(e);
   }
-
-  // 🔥 GERADOR LOCAL (NÃO QUEBRA)
-  const roteiro = gerarRoteiroLocal(tema, plataforma, duracao, estilo);
-
-  resultado.textContent = roteiro;
-  btnCopiar.style.display = "block";
 }
 
 function gerarRoteiroLocal(tema, plataforma, duracao, estilo) {
   return `
 VIDEO_SCRIPT:
 
-CENA 1 (0–3s):
-Voz: "${gancho(estilo, tema)}"
-Texto na tela: ${tema.toUpperCase()}
-Visual: Close dramático + corte rápido
+CENA 1 (0–3s)
+Voz: "${gancho(estilo)}"
+Texto: "${tema.toUpperCase()}"
 
-CENA 2 (3–7s):
+CENA 2 (3–7s)
 Voz: "${meio(estilo)}"
-Texto na tela: "Poucos percebem isso…"
-Visual: Detalhe revelador + slow motion
+Texto: "Poucos percebem isso…"
 
-CENA FINAL (7–${duracao}):
+CENA FINAL (7–${duracao})
 Voz: "${final(estilo)}"
-Texto na tela: "Assista até o fim"
-Visual: Fade + impacto emocional
+Texto: "Assista até o fim"
 
 CAPCUT_PROMPT:
-Formato ${plataforma}, vertical 9:16, estilo ${estilo}, música intensa, cortes rápidos, zoom leve, legenda grande.
+Formato ${plataforma}, vertical 9:16, estilo ${estilo},
+música intensa, cortes rápidos, zoom leve.
 
 RETENCAO_HOOK:
-"${gancho(estilo, tema)}"
+"${gancho(estilo)}"
 
 LOOP_FINAL:
 "Agora volta e repara nesse detalhe."
 
 THUMBNAIL:
-TEXTO: ${tema.split(" ").slice(0,3).join(" ").toUpperCase()}
+TEXTO: ${tema.split(" ").slice(0, 3).join(" ").toUpperCase()}
 EMOÇÃO: Impacto
-VISUAL: Close forte + contraste alto
+VISUAL: Close dramático
 `;
 }
 
-function gancho(estilo, tema) {
-  if (estilo === "Bíblico") return `Isso está acontecendo agora e quase ninguém percebe…`;
-  if (estilo === "Anime") return `Esse momento muda tudo em ${tema}`;
-  if (estilo === "Tecnologia") return `Isso está sendo escondido de você`;
-  if (estilo === "Dark") return `Algo está errado… e você vai entender agora`;
-  return `Você nunca reparou nisso`;
+function gancho(estilo) {
+  if (estilo === "Bíblico") return "Isso não é coincidência…";
+  if (estilo === "Anime") return "Esse detalhe muda tudo…";
+  if (estilo === "Tecnologia") return "Isso está sendo escondido…";
+  if (estilo === "Dark Viral") return "Algo está errado…";
+  return "Você nunca percebeu isso…";
 }
 
 function meio(estilo) {
-  if (estilo === "Bíblico") return `A Bíblia já avisava, mas poucos prestaram atenção`;
-  if (estilo === "Anime") return `Esse detalhe muda o significado da cena`;
-  if (estilo === "Tecnologia") return `O sistema não quer que você perceba`;
-  if (estilo === "Dark") return `Quando você entende, não tem mais volta`;
-  return `Veja com atenção`;
+  if (estilo === "Bíblico") return "A Bíblia já avisava sobre isso.";
+  if (estilo === "Anime") return "Poucos fãs notam esse detalhe.";
+  if (estilo === "Tecnologia") return "O sistema funciona assim.";
+  if (estilo === "Dark Viral") return "Quando entende, não tem volta.";
+  return "Veja com atenção.";
 }
 
 function final(estilo) {
-  if (estilo === "Bíblico") return `Quem tem ouvidos, ouça`;
-  if (estilo === "Anime") return `Agora você não vai mais assistir igual`;
-  if (estilo === "Tecnologia") return `Depois disso, nada é igual`;
-  if (estilo === "Dark") return `Você foi avisado`;
-  return `Agora você sabe`;
+  if (estilo === "Bíblico") return "Quem crê, entenda.";
+  if (estilo === "Anime") return "Agora você vai assistir diferente.";
+  if (estilo === "Tecnologia") return "Depois disso, nada é igual.";
+  if (estilo === "Dark Viral") return "Você foi avisado.";
+  return "Agora você sabe.";
 }
 
 function copiar() {
-  const texto = document.getElementById("resultado").textContent;
+  const texto = document.getElementById("resultado").innerText;
   navigator.clipboard.writeText(texto);
   alert("Roteiro copiado para o CapCut!");
 }
