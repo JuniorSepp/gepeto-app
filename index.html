@@ -12,24 +12,11 @@
       background: #000;
       color: #fff;
     }
-
     .container {
       max-width: 500px;
       margin: auto;
       padding: 20px;
     }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-
-    p {
-      text-align: center;
-      opacity: 0.7;
-      margin-bottom: 20px;
-    }
-
     input, select, button {
       width: 100%;
       padding: 14px;
@@ -38,14 +25,12 @@
       border: none;
       font-size: 16px;
     }
-
     button {
       background: #e50914;
       color: #fff;
       font-weight: bold;
       cursor: pointer;
     }
-
     #resultado {
       margin-top: 20px;
       white-space: pre-wrap;
@@ -62,9 +47,7 @@
     <h1>🎬 Gepeto Shorts</h1>
     <p>Roteiros virais aprovados pelo algoritmo</p>
 
-    <!-- CAMPO PRINCIPAL -->
-    <input id="tema" type="text" placeholder="Digite o tema do vídeo" />
-
+    <input id="tema" placeholder="Digite o tema do vídeo" />
     <select id="plataforma">
       <option>YouTube Shorts</option>
       <option>Instagram Reels</option>
@@ -74,7 +57,6 @@
     <select id="duracao">
       <option>15 segundos</option>
       <option>30 segundos</option>
-      <option>58 segundos</option>
     </select>
 
     <select id="estilo">
@@ -85,14 +67,42 @@
       <option>Dark Viral</option>
     </select>
 
-    <!-- BOTÃO -->
     <button onclick="gerarShort()">GERAR SHORT</button>
 
-    <!-- RESULTADO -->
     <div id="resultado"></div>
   </div>
 
-  <!-- SCRIPT SEMPRE NO FINAL -->
-  <script src="./app.js"></script>
+  <script>
+    function gerarShort() {
+      const tema = document.getElementById("tema").value.trim();
+      const plataforma = document.getElementById("plataforma").value;
+      const duracao = document.getElementById("duracao").value;
+      const estilo = document.getElementById("estilo").value;
+      const resultado = document.getElementById("resultado");
+
+      if (!tema) {
+        resultado.innerText = "❌ Digite um tema.";
+        return;
+      }
+
+      resultado.innerText = `
+VIDEO_SCRIPT:
+
+[CENA 1 | 0-3s]
+"Isso não é coincidência…"
+
+[CENA 2]
+"${estilo === "Bíblico" ? "A Bíblia já avisava…" : "Poucos percebem isso…"}"
+
+[CENA FINAL]
+"Agora volta e repara nesse detalhe."
+
+PLATAFORMA: ${plataforma}
+DURAÇÃO: ${duracao}
+ESTILO: ${estilo}
+TEMA: ${tema}
+`;
+    }
+  </script>
 </body>
 </html>
