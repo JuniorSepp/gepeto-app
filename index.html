@@ -1,56 +1,49 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Gepeto Shorts</title>
-  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { background:#000; color:#fff; font-family:Arial; padding:20px }
+    input, select, button { width:100%; padding:12px; margin:8px 0 }
+    button { background:red; color:white; font-weight:bold }
+    pre { white-space:pre-wrap; margin-top:20px }
+  </style>
 </head>
-
 <body>
-  <div class="app">
-    <h1>🎬 Gepeto Shorts</h1>
-    <p>Roteiros virais aprovados pelo algoritmo</p>
 
-    <!-- TEMA -->
-    <input 
-      id="tema" 
-      type="text" 
-      placeholder="Ex: Naruto vs Samurai X, Apocalipse 13, IA espionando você"
-    />
+<h2>🎬 Gepeto Shorts</h2>
 
-    <!-- PLATAFORMA -->
-    <select id="plataforma">
-      <option value="YouTube Shorts">YouTube Shorts</option>
-      <option value="Instagram Reels">Instagram Reels</option>
-      <option value="TikTok">TikTok</option>
-    </select>
+<input id="tema" placeholder="Digite o tema do vídeo">
 
-    <!-- DURAÇÃO -->
-    <select id="duracao">
-      <option value="15s">15 segundos</option>
-      <option value="30s">30 segundos</option>
-      <option value="58s">58 segundos</option>
-    </select>
+<select id="plataforma">
+  <option>YouTube Shorts</option>
+  <option>Instagram Reels</option>
+  <option>TikTok</option>
+</select>
 
-    <!-- ESTILO -->
-    <select id="estilo">
-      <option value="Anime">Anime</option>
-      <option value="Bíblico">Bíblico</option>
-      <option value="Tecnologia">Tecnologia</option>
-      <option value="Curiosidade">Curiosidade</option>
-      <option value="Dark">Dark</option>
-    </select>
+<select id="duracao">
+  <option>15 segundos</option>
+  <option>30 segundos</option>
+  <option>58 segundos</option>
+</select>
 
-    <button onclick="gerar()">GERAR SHORT</button>
+<select id="estilo">
+  <option>Bíblico</option>
+  <option>Anime</option>
+  <option>Dark Viral</option>
+  <option>Tecnologia</option>
+  <option>Curiosidade</option>
+</select>
 
-    <pre id="resultado"></pre>
+<button onclick="gerar()">GERAR SHORT</button>
 
-    <button id="copiar" onclick="copiar()" style="display:none;">
-      📋 COPIAR PARA CAPCUT
-    </button>
-  </div>
+<pre id="resultado"></pre>
 
-  <script src="app.js"></script>
+<button id="copiar" onclick="copiar()" style="display:none">
+📋 COPIAR PARA CAPCUT
+</button>
+
+<script src="app.js"></script>
 </body>
 </html>
