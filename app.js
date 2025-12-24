@@ -1,74 +1,79 @@
-const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gerar";
+const API_KEY = "SUA_API_KEY_AQUI"; // OpenAI ou compatível
 
 async function gerar() {
   const tema = document.getElementById("tema").value.trim();
   const plataforma = document.getElementById("plataforma").value;
-  const duracao = document.getElementById("duracao").value;
   const estilo = document.getElementById("estilo").value;
-  const resultado = document.getElementById("resultado");
+  const duracao = document.getElementById("duracao").value;
 
-  if (!tema || !plataforma || !duracao || !estilo) {
-    resultado.innerHTML = "⚠️ Preencha todos os campos.";
+  const resultado = document.getElementById("resultado");
+  const botao = document.getElementById("btnGerar");
+
+  if (!tema) {
+    resultado.innerText = "⚠️ Digite uma ideia ou tema.";
     return;
   }
 
-  resultado.innerHTML = "⏳ Gerando roteiro viral...";
+  botao.disabled = true;
+  botao.innerText = "GERANDO...";
+  resultado.innerText = "⏳ Criando roteiro viral...";
+
+  const prompt = `
+Você é um especialista em conteúdo viral para vídeos curtos.
+
+TEMA: ${tema}
+PLATAFORMA: ${plataforma}
+ESTILO: ${estilo}
+DURAÇÃO: ${duracao}
+
+REGRAS:
+- NÃO pedir informações
+- NÃO sair do tema
+- NÃO usar frases genéricas
+- Gancho forte nos primeiros 2s
+- Texto pronto para CapCut / IA de vídeo
+- Criar loop psicológico
+
+FORMATO DE SAÍDA (texto corrido, sem cenas):
+
+ROTEIRO_VIRAL:
+CAPCUT_PROMPT:
+RETENCAO_HOOK:
+LOOP_FINAL:
+THUMBNAIL:
+TEXTO:
+EMOÇÃO:
+VISUAL:
+`;
 
   try {
-    const res = await fetch(WEBHOOK_URL, {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + API_KEY
+      },
       body: JSON.stringify({
-        tema,
-        plataforma,
-        duracao,
-        estilo
+        model: "gpt-4.1-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.9
       })
     });
 
     const data = await res.json();
-
-    let texto =
-      data?.shorts?.[0]?.roteiro ||
-      data?.output?.[0]?.content?.[0]?.text ||
-      null;
+    const texto = data.choices?.[0]?.message?.content;
 
     if (!texto) {
-      resultado.innerHTML = "⚠️ IA respondeu sem roteiro.";
-      console.log(data);
-      return;
+      resultado.innerText = "❌ Erro ao gerar roteiro.";
+    } else {
+      resultado.innerText = texto;
     }
 
-    resultado.innerHTML = `
-      <pre style="
-        white-space: pre-wrap;
-        background:#000;
-        color:#fff;
-        padding:16px;
-        border-radius:8px;
-        line-height:1.6;
-      ">${texto}</pre>
-
-      <button onclick="copiar()" style="
-        margin-top:12px;
-        width:100%;
-        padding:12px;
-        background:#e50914;
-        color:white;
-        border:none;
-        border-radius:6px;
-        font-weight:bold;
-      ">📋 COPIAR ROTEIRO</button>
-    `;
-
   } catch (e) {
-    resultado.innerHTML = "❌ Erro ao conectar.";
+    resultado.innerText = "❌ Erro de conexão.";
     console.error(e);
+  } finally {
+    botao.disabled = false;
+    botao.innerText = "GERAR ROTEIRO";
   }
-}
-
-function copiar() {
-  const texto = document.querySelector("pre").innerText;
-  navigator.clipboard.writeText(texto);
-  alert("Roteiro copiado!");
 }
