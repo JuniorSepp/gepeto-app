@@ -1,91 +1,104 @@
-const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gerar";
-
 async function gerar() {
-  const categoria = document.getElementById("categoria")?.value;
-  const tema = document.getElementById("tema")?.value;
-  const plataforma = document.getElementById("plataforma")?.value;
-  const duracao = document.getElementById("duracao")?.value;
-  const estilo = document.getElementById("estilo")?.value;
+  const tema = document.getElementById("tema").value.trim();
+  const plataforma = document.getElementById("plataforma").value;
+  const duracao = document.getElementById("duracao").value;
+  const estilo = document.getElementById("estilo").value;
 
   const resultado = document.getElementById("resultado");
-  const botao = document.querySelector("button");
+  const btnCopiar = document.getElementById("copiar");
 
-  // Validação real
-  if (!categoria || !tema || !plataforma || !duracao || !estilo) {
-    resultado.innerHTML = "⚠️ Preencha todos os campos para gerar o roteiro.";
+  // Validação mínima (SEM categoria)
+  if (!tema) {
+    resultado.textContent = "⚠️ Digite um TEMA para o vídeo.";
+    btnCopiar.style.display = "none";
     return;
   }
 
-  botao.disabled = true;
-  botao.innerText = "GERANDO...";
-  resultado.innerHTML = "⏳ Criando roteiro viral aprovado pelo algoritmo...";
+  resultado.textContent = "⏳ Gerando roteiro viral...";
+  btnCopiar.style.display = "none";
+
+  const prompt = `
+Você é o GEPETO, especialista em roteiros virais para vídeos curtos.
+
+DADOS:
+TEMA: ${tema}
+PLATAFORMA: ${plataforma}
+DURAÇÃO: ${duracao}
+ESTILO: ${estilo}
+
+INTERPRETAÇÃO DO ESTILO:
+- Anime → épico, confronto, detalhe oculto
+- Bíblico → solene, espiritual, revelação
+- Tecnologia → alerta, impacto, futuro
+- Curiosidade → surpresa, revelação
+- Dark → mistério, tensão psicológica
+
+REGRAS:
+- NÃO pedir informações
+- NÃO validar campos
+- Criar narrativa falável
+- Pensar como algoritmo
+- Prender atenção nos primeiros 3 segundos
+
+FORMATO FIXO:
+
+VIDEO_SCRIPT:
+CENA 1 (0–3s):
+Voz:
+Texto na tela:
+Visual:
+
+CENA 2 (3–7s):
+Voz:
+Texto na tela:
+Visual:
+
+CENA FINAL (7–${duracao}):
+Voz:
+Texto na tela:
+Visual:
+
+CAPCUT_PROMPT:
+RETENCAO_HOOK:
+LOOP_FINAL:
+THUMBNAIL:
+TEXTO:
+EMOÇÃO:
+VISUAL:
+`;
 
   try {
-    const response = await fetch(WEBHOOK_URL, {
+    const response = await fetch("SUA_API_AQUI", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": "Bearer SUA_CHAVE_AQUI"
       },
       body: JSON.stringify({
-        categoria,
-        tema,
-        plataforma,
-        duracao,
-        estilo
+        model: "gpt-4.1-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.8
       })
     });
 
     const data = await response.json();
-
-    // Aceita qualquer retorno válido da IA
-    let texto =
-      data?.VIDEO_SCRIPT ||
-      data?.output?.[0]?.content?.[0]?.text ||
-      data?.shorts?.[0]?.roteiro;
+    const texto = data.choices?.[0]?.message?.content;
 
     if (!texto) {
-      resultado.innerHTML = "⚠️ A IA respondeu, mas sem roteiro.";
-      console.warn("Resposta:", data);
+      resultado.textContent = "⚠️ A IA não retornou conteúdo.";
       return;
     }
 
-    resultado.innerHTML = `
-      <pre style="
-        white-space: pre-wrap;
-        background:#000;
-        color:#fff;
-        padding:16px;
-        border-radius:8px;
-        font-size:14px;
-        line-height:1.6;
-      ">${texto}</pre>
+    resultado.textContent = texto;
+    btnCopiar.style.display = "block";
 
-      <button onclick="copiar()" style="
-        margin-top:12px;
-        width:100%;
-        padding:12px;
-        background:#e50914;
-        color:white;
-        border:none;
-        border-radius:6px;
-        font-weight:bold;
-      ">
-        📋 COPIAR PARA CAPCUT
-      </button>
-    `;
-
-  } catch (erro) {
-    console.error(erro);
-    resultado.innerHTML = "❌ Erro ao conectar com o servidor.";
-  } finally {
-    botao.disabled = false;
-    botao.innerText = "GERAR SHORT";
+  } catch (e) {
+    resultado.textContent = "❌ Erro ao gerar roteiro.";
   }
 }
 
 function copiar() {
-  const texto = document.querySelector("pre")?.innerText;
-  if (!texto) return;
+  const texto = document.getElementById("resultado").textContent;
   navigator.clipboard.writeText(texto);
-  alert("Roteiro copiado! 🎬");
+  alert("Roteiro copiado para o CapCut!");
 }
