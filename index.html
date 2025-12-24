@@ -3,106 +3,110 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gepeto Shorts</title>
+  <title>Gepeto App</title>
 
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
+      padding: 0;
+      background: #0f0f0f;
       color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
     }
-    .container {
-      max-width: 500px;
+
+    .app {
+      max-width: 420px;
       margin: auto;
       padding: 20px;
     }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    p {
+      text-align: center;
+      opacity: 0.8;
+      font-size: 14px;
+    }
+
     input, select, button {
       width: 100%;
+      margin-top: 12px;
       padding: 14px;
-      margin-bottom: 12px;
-      border-radius: 6px;
+      border-radius: 8px;
       border: none;
-      font-size: 16px;
+      font-size: 15px;
     }
+
+    input, select {
+      background: #1e1e1e;
+      color: #fff;
+    }
+
     button {
       background: #e50914;
       color: #fff;
       font-weight: bold;
       cursor: pointer;
     }
+
+    button:disabled {
+      opacity: 0.6;
+    }
+
     #resultado {
-      margin-top: 20px;
+      margin-top: 16px;
+    }
+
+    pre {
       white-space: pre-wrap;
-      background: #111;
-      padding: 15px;
-      border-radius: 6px;
+      background: #000;
+      padding: 14px;
+      border-radius: 8px;
       font-size: 14px;
+      line-height: 1.6;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>🎬 Gepeto Shorts</h1>
-    <p>Roteiros virais aprovados pelo algoritmo</p>
+  <div class="app">
+    <h1>🎬 Gepeto</h1>
+    <p>Roteiros virais prontos para Shorts, Reels e CapCut</p>
 
-    <input id="tema" placeholder="Digite o tema do vídeo" />
+    <!-- TEMA -->
+    <input id="tema" type="text" placeholder="Digite o tema (ex: Naruto, Deus, IA)" />
+
+    <!-- PLATAFORMA -->
     <select id="plataforma">
-      <option>YouTube Shorts</option>
-      <option>Instagram Reels</option>
-      <option>TikTok</option>
+      <option value="YouTube Shorts">YouTube Shorts</option>
+      <option value="Instagram Reels">Instagram Reels</option>
+      <option value="TikTok">TikTok</option>
     </select>
 
+    <!-- DURAÇÃO -->
     <select id="duracao">
-      <option>15 segundos</option>
-      <option>30 segundos</option>
+      <option value="15s">15 segundos</option>
+      <option value="30s">30 segundos</option>
+      <option value="58s">58 segundos</option>
     </select>
 
+    <!-- ESTILO -->
     <select id="estilo">
-      <option>Bíblico</option>
-      <option>Anime</option>
-      <option>Tecnologia</option>
-      <option>Curiosidade</option>
-      <option>Dark Viral</option>
+      <option value="bíblico">Bíblico</option>
+      <option value="anime">Anime</option>
+      <option value="tecnologia">Tecnologia</option>
+      <option value="curiosidade">Curiosidades</option>
+      <option value="dark">Dark / Viral</option>
     </select>
 
-    <button onclick="gerarShort()">GERAR SHORT</button>
+    <button id="btnGerar" onclick="gerar()">GERAR ROTEIRO</button>
 
     <div id="resultado"></div>
   </div>
 
-  <script>
-    function gerarShort() {
-      const tema = document.getElementById("tema").value.trim();
-      const plataforma = document.getElementById("plataforma").value;
-      const duracao = document.getElementById("duracao").value;
-      const estilo = document.getElementById("estilo").value;
-      const resultado = document.getElementById("resultado");
-
-      if (!tema) {
-        resultado.innerText = "❌ Digite um tema.";
-        return;
-      }
-
-      resultado.innerText = `
-VIDEO_SCRIPT:
-
-[CENA 1 | 0-3s]
-"Isso não é coincidência…"
-
-[CENA 2]
-"${estilo === "Bíblico" ? "A Bíblia já avisava…" : "Poucos percebem isso…"}"
-
-[CENA FINAL]
-"Agora volta e repara nesse detalhe."
-
-PLATAFORMA: ${plataforma}
-DURAÇÃO: ${duracao}
-ESTILO: ${estilo}
-TEMA: ${tema}
-`;
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
