@@ -1,31 +1,34 @@
 const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gerar";
 
 async function gerar() {
-  const categoria = document.getElementById("categoria").value;
-  const tema = document.getElementById("tema").value.trim();
-  const plataforma = document.getElementById("plataforma").value;
-  const duracao = document.getElementById("duracao").value;
-  const estilo = document.getElementById("estilo").value;
+  const categoria = document.getElementById("categoria")?.value;
+  const tema = document.getElementById("tema")?.value?.trim();
+  const plataforma = document.getElementById("plataforma")?.value;
+  const duracao = document.getElementById("duracao")?.value;
+  const estilo = document.getElementById("estilo")?.value;
 
   const resultado = document.getElementById("resultado");
-  const botao = document.getElementById("btnGerar");
+  const botao = document.querySelector("button");
 
-  // 🔒 Validação REAL
-  if (!categoria || !tema || !plataforma || !duracao || !estilo) {
+  // 🔒 Validação REAL (sem falso negativo)
+  if (
+    !categoria ||
+    !tema ||
+    !plataforma ||
+    !duracao ||
+    !estilo
+  ) {
     resultado.innerHTML = `
-      ⚠️ Por favor, forneça todos os dados obrigatórios:
-      <br>- CATEGORIA
-      <br>- TEMA
-      <br>- PLATAFORMA
-      <br>- DURAÇÃO
-      <br>- ESTILO
+      <div style="color:#ffb400; font-weight:bold;">
+        ⚠️ Preencha TODOS os campos acima para gerar o roteiro.
+      </div>
     `;
     return;
   }
 
   botao.disabled = true;
   botao.innerText = "GERANDO...";
-  resultado.innerHTML = "⏳ Gerando roteiro viral otimizado para algoritmo...";
+  resultado.innerHTML = "⏳ Criando roteiro viral aprovado pelo algoritmo...";
 
   try {
     const res = await fetch(WEBHOOK_URL, {
@@ -42,26 +45,26 @@ async function gerar() {
 
     const data = await res.json();
 
-    let roteiro = null;
+    let texto = null;
 
-    // ✅ FORMATO PADRÃO FINAL
-    if (data?.shorts?.length && data.shorts[0].roteiro) {
-      roteiro = data.shorts[0].roteiro;
+    // 🔍 Formato padrão n8n / OpenAI
+    if (data?.output?.[0]?.content?.[0]?.text) {
+      texto = data.output[0].content[0].text;
     }
 
-    // ✅ FORMATO MESSAGE A MODEL (n8n)
-    if (!roteiro && data?.output?.[0]?.content?.[0]?.text) {
-      roteiro = data.output[0].content[0].text;
-    }
-
-    if (!roteiro) {
-      resultado.innerHTML = "⚠️ A IA não retornou roteiro. Verifique o fluxo no n8n.";
-      console.warn("Resposta da IA:", data);
+    if (!texto) {
+      resultado.innerHTML = `
+        <div style="color:red;">
+          ❌ A IA respondeu, mas não retornou roteiro.
+        </div>
+      `;
+      console.warn("Resposta recebida:", data);
       return;
     }
 
+    // ✅ Renderiza roteiro + botão copiar
     resultado.innerHTML = `
-<pre style="
+<pre id="roteiro" style="
 white-space: pre-wrap;
 background:#000;
 color:#fff;
@@ -70,7 +73,7 @@ border-radius:8px;
 font-size:14px;
 line-height:1.6;
 ">
-${roteiro}
+${texto}
 </pre>
 
 <button onclick="copiar()" style="
@@ -80,13 +83,13 @@ width:100%;
 background:#e50914;
 color:white;
 border:none;
-border-radius:8px;
+border-radius:6px;
 font-weight:bold;
 font-size:16px;
 ">
 📋 COPIAR PARA CAPCUT
 </button>
-`;
+    `;
 
   } catch (err) {
     console.error(err);
@@ -98,8 +101,8 @@ font-size:16px;
 }
 
 function copiar() {
-  const texto = document.querySelector("pre")?.innerText;
-  if (!texto) return;
+  const texto = document.getElementById("roteiro")?.innerText;
+  if (!texto) return alert("Nada para copiar.");
   navigator.clipboard.writeText(texto);
-  alert("Roteiro copiado! 🎬");
+  alert("Roteiro copiado para o CapCut 🎬");
 }
