@@ -4,87 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gepeto Shorts</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b0b0b;
-      color: #fff;
-    }
-
-    .app {
-      max-width: 480px;
-      margin: auto;
-      padding: 16px;
-    }
-
-    h1 {
-      text-align: center;
-    }
-
-    select, input, button {
-      width: 100%;
-      margin: 8px 0;
-      padding: 12px;
-      border-radius: 6px;
-      border: none;
-      font-size: 16px;
-    }
-
-    button {
-      background: #e50914;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background: #555;
-    }
-
-    #resultado {
-      margin-top: 16px;
-      white-space: pre-wrap;
-      background: #000;
-      padding: 14px;
-      border-radius: 8px;
-      line-height: 1.6;
-    }
-  </style>
 </head>
 
 <body>
   <div class="app">
     <h1>🎬 Gepeto Shorts</h1>
+    <p>Roteiros virais prontos para CapCut / Shorts / Reels</p>
 
-    <input id="tema" placeholder="Digite a ideia do vídeo (ex: Naruto luta final)" />
+    <!-- TEMA -->
+    <input
+      id="tema"
+      type="text"
+      placeholder="Digite o tema (ex: Naruto, Apocalipse, IA)"
+    />
 
-    <select id="plataforma">
-      <option value="YouTube Shorts">YouTube Shorts</option>
-      <option value="Instagram Reels">Instagram Reels</option>
-      <option value="TikTok">TikTok</option>
-    </select>
-
+    <!-- ESTILO -->
     <select id="estilo">
-      <option value="Bíblico">Bíblico</option>
-      <option value="Anime">Anime</option>
-      <option value="Tecnologia">Tecnologia</option>
-      <option value="Curiosidades">Curiosidades</option>
-      <option value="Dark">Dark</option>
+      <option value="dark">🌑 Dark psicológico</option>
+      <option value="biblico">✝️ Bíblico</option>
+      <option value="anime">⚔️ Anime</option>
+      <option value="curiosidades">🧠 Curiosidades</option>
+      <option value="tecnologia">🤖 Tecnologia</option>
     </select>
 
-    <select id="duracao">
-      <option value="15 segundos">15 segundos</option>
-      <option value="30 segundos">30 segundos</option>
-      <option value="58 segundos">58 segundos</option>
-    </select>
+    <!-- BOTÃO -->
+    <button onclick="gerar()">GERAR ROTEIROS</button>
 
-    <button id="btnGerar" onclick="gerar()">GERAR ROTEIRO</button>
-
+    <!-- RESULTADO -->
     <div id="resultado"></div>
   </div>
 
   <script src="app.js"></script>
 </body>
-</html>
+</
