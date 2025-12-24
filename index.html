@@ -1,108 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Gepeto Shorts</title>
-
-<style>
-body {
-  background:#000;
-  color:#fff;
-  font-family:Arial;
-  padding:20px;
-}
-select, input, button {
-  width:100%;
-  margin-bottom:10px;
-  padding:12px;
-  font-size:16px;
-}
-button {
-  background:red;
-  color:#fff;
-  border:none;
-}
-#resultado {
-  white-space:pre-wrap;
-  margin-top:20px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gepeto Shorts</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 
 <body>
+  <div class="app">
+    <h1>🎬 Gepeto Shorts</h1>
+    <p>Roteiros virais aprovados pelo algoritmo</p>
 
-<h2>Gepeto Shorts</h2>
+    <!-- TEMA -->
+    <input 
+      id="tema" 
+      type="text" 
+      placeholder="Ex: Naruto vs Samurai X, Apocalipse 13, IA espionando você"
+    />
 
-<select id="categoria">
-  <option value="">Categoria</option>
-  <option value="Anime">Anime</option>
-</select>
+    <!-- PLATAFORMA -->
+    <select id="plataforma">
+      <option value="YouTube Shorts">YouTube Shorts</option>
+      <option value="Instagram Reels">Instagram Reels</option>
+      <option value="TikTok">TikTok</option>
+    </select>
 
-<input id="tema" placeholder="Tema do vídeo">
+    <!-- DURAÇÃO -->
+    <select id="duracao">
+      <option value="15s">15 segundos</option>
+      <option value="30s">30 segundos</option>
+      <option value="58s">58 segundos</option>
+    </select>
 
-<select id="plataforma">
-  <option value="">Plataforma</option>
-  <option value="YouTube Shorts">YouTube Shorts</option>
-  <option value="Instagram Reels">Instagram Reels</option>
-</select>
+    <!-- ESTILO -->
+    <select id="estilo">
+      <option value="Anime">Anime</option>
+      <option value="Bíblico">Bíblico</option>
+      <option value="Tecnologia">Tecnologia</option>
+      <option value="Curiosidade">Curiosidade</option>
+      <option value="Dark">Dark</option>
+    </select>
 
-<select id="duracao">
-  <option value="">Duração</option>
-  <option value="15s">15 segundos</option>
-  <option value="30s">30 segundos</option>
-</select>
+    <button onclick="gerar()">GERAR SHORT</button>
 
-<select id="estilo">
-  <option value="">Estilo</option>
-  <option value="Dark Viral">Dark Viral</option>
-  <option value="Épico">Épico</option>
-</select>
+    <pre id="resultado"></pre>
 
-<button id="gerarBtn">GERAR SHORT</button>
+    <button id="copiar" onclick="copiar()" style="display:none;">
+      📋 COPIAR PARA CAPCUT
+    </button>
+  </div>
 
-<div id="resultado"></div>
-
-<script>
-document.getElementById("gerarBtn").addEventListener("click", function () {
-
-  const categoria = document.getElementById("categoria").value;
-  const tema = document.getElementById("tema").value;
-  const plataforma = document.getElementById("plataforma").value;
-  const duracao = document.getElementById("duracao").value;
-  const estilo = document.getElementById("estilo").value;
-
-  if (!categoria || !tema || !plataforma || !duracao || !estilo) {
-    document.getElementById("resultado").innerText =
-      "⚠️ Preencha todos os campos.";
-    return;
-  }
-
-  const roteiro = `
-VIDEO_SCRIPT:
-[CENA 1 | 0–3s]
-Gancho agressivo sobre ${tema}.
-
-[CENA 2 | ${duracao}]
-Conflito + curiosidade máxima.
-
-CAPCUT_PROMPT:
-Formato ${plataforma}, estilo ${estilo}, cortes rápidos.
-
-RETENCAO_HOOK:
-Isso sobre ${tema} quase ninguém percebe…
-
-LOOP_FINAL:
-Agora volta e repara nesse detalhe.
-
-THUMBNAIL:
-TEXTO: ${tema.toUpperCase()}
-EMOÇÃO: Impacto
-VISUAL: Close dramático
-`;
-
-  document.getElementById("resultado").innerText = roteiro;
-});
-</script>
-
+  <script src="app.js"></script>
 </body>
 </html>
