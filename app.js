@@ -1,72 +1,76 @@
-function gerarShort() {
+const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gerar";
+
+async function gerar() {
   const tema = document.getElementById("tema").value.trim();
   const plataforma = document.getElementById("plataforma").value;
   const duracao = document.getElementById("duracao").value;
   const estilo = document.getElementById("estilo").value;
   const resultado = document.getElementById("resultado");
 
-  if (!tema) {
-    resultado.innerText = "Digite um tema para gerar o roteiro.";
+  if (!tema || !plataforma || !duracao || !estilo) {
+    resultado.innerHTML = "⚠️ Preencha todos os campos.";
     return;
   }
 
-  // GANCHOS VARIÁVEIS
-  const ganchos = [
-    `Poucos estão preparados para o que isso significa: ${tema}.`,
-    `Quase ninguém percebeu esse sinal sobre ${tema}.`,
-    `Isso muda completamente a forma como você entende ${tema}.`,
-    `Esse detalhe sobre ${tema} está sendo ignorado.`
-  ];
+  resultado.innerHTML = "⏳ Gerando roteiro viral...";
 
-  // DESENVOLVIMENTO VARIÁVEL
-  const desenvolvimentos = [
-    `O que parece simbólico carrega uma mensagem profunda.`,
-    `Há uma ligação direta com acontecimentos atuais.`,
-    `A maioria passa por isso sem perceber o significado.`,
-    `Esse momento revela algo que não pode ser ignorado.`
-  ];
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tema,
+        plataforma,
+        duracao,
+        estilo
+      })
+    });
 
-  // FECHAMENTOS EM LOOP
-  const finais = [
-    `Agora assiste de novo com isso em mente.`,
-    `Depois disso, você não vê da mesma forma.`,
-    `Repara nesse detalhe quando assistir novamente.`,
-    `Isso muda tudo quando você entende o contexto.`
-  ];
+    const data = await res.json();
 
-  const hook = ganchos[Math.floor(Math.random() * ganchos.length)];
-  const desenvolvimento = desenvolvimentos[Math.floor(Math.random() * desenvolvimentos.length)];
-  const final = finais[Math.floor(Math.random() * finais.length)];
+    const texto =
+      data?.shorts?.[0]?.roteiro ||
+      data?.output?.[0]?.content?.[0]?.text;
 
-  const roteiro = `
-VIDEO_SCRIPT:
+    if (!texto) {
+      resultado.innerHTML = "⚠️ A IA respondeu, mas sem roteiro.";
+      console.warn(data);
+      return;
+    }
 
-[CENA 1 | 0–3s]
-Voz: "${hook}"
-Visual: Impacto imediato, texto grande, corte rápido.
+    resultado.innerHTML = `
+      <pre style="
+        white-space: pre-wrap;
+        background:#000;
+        color:#fff;
+        padding:16px;
+        border-radius:8px;
+        font-size:14px;
+        line-height:1.6;">
+${texto}
+      </pre>
 
-[CENA 2 | 3–${duracao - 3}s]
-Voz: "${desenvolvimento}"
-Visual: Close dramático, trilha crescente.
+      <button onclick="copiar()" style="
+        margin-top:12px;
+        padding:10px;
+        width:100%;
+        background:#e50914;
+        color:#fff;
+        border:none;
+        border-radius:6px;
+        font-weight:bold;">
+        📋 COPIAR ROTEIRO
+      </button>
+    `;
 
-[CENA FINAL | ${duracao}s]
-Voz: "${final}"
-Visual: Pausa + olhar fixo + fade.
+  } catch (e) {
+    console.error(e);
+    resultado.innerHTML = "❌ Erro ao conectar com o servidor.";
+  }
+}
 
-CAPCUT_PROMPT:
-Formato ${plataforma}, vertical 9:16, estilo ${estilo}, cortes dinâmicos, zoom leve, trilha emocional.
-
-RETENCAO_HOOK:
-"${hook}"
-
-LOOP_FINAL:
-"${final}"
-
-THUMBNAIL:
-Texto: "${tema.toUpperCase()}"
-Emoção: Impacto
-Visual: Close dramático
-`;
-
-  resultado.innerText = roteiro;
+function copiar() {
+  const texto = document.querySelector("pre").innerText;
+  navigator.clipboard.writeText(texto);
+  alert("Roteiro copiado!");
 }
