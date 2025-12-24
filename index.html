@@ -3,46 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gepeto App</title>
+  <title>Gepeto Shorts</title>
 
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background: #0f0f0f;
+      font-family: Arial, sans-serif;
+      background: #0b0b0b;
       color: #fff;
-      font-family: Arial, Helvetica, sans-serif;
     }
 
     .app {
-      max-width: 420px;
+      max-width: 480px;
       margin: auto;
-      padding: 20px;
+      padding: 16px;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 5px;
     }
 
-    p {
-      text-align: center;
-      opacity: 0.8;
-      font-size: 14px;
-    }
-
-    input, select, button {
+    select, input, button {
       width: 100%;
-      margin-top: 12px;
-      padding: 14px;
-      border-radius: 8px;
+      margin: 8px 0;
+      padding: 12px;
+      border-radius: 6px;
       border: none;
-      font-size: 15px;
-    }
-
-    input, select {
-      background: #1e1e1e;
-      color: #fff;
+      font-size: 16px;
     }
 
     button {
@@ -53,19 +40,15 @@
     }
 
     button:disabled {
-      opacity: 0.6;
+      background: #555;
     }
 
     #resultado {
       margin-top: 16px;
-    }
-
-    pre {
       white-space: pre-wrap;
       background: #000;
       padding: 14px;
       border-radius: 8px;
-      font-size: 14px;
       line-height: 1.6;
     }
   </style>
@@ -73,33 +56,28 @@
 
 <body>
   <div class="app">
-    <h1>🎬 Gepeto</h1>
-    <p>Roteiros virais prontos para Shorts, Reels e CapCut</p>
+    <h1>🎬 Gepeto Shorts</h1>
 
-    <!-- TEMA -->
-    <input id="tema" type="text" placeholder="Digite o tema (ex: Naruto, Deus, IA)" />
+    <input id="tema" placeholder="Digite a ideia do vídeo (ex: Naruto luta final)" />
 
-    <!-- PLATAFORMA -->
     <select id="plataforma">
       <option value="YouTube Shorts">YouTube Shorts</option>
       <option value="Instagram Reels">Instagram Reels</option>
       <option value="TikTok">TikTok</option>
     </select>
 
-    <!-- DURAÇÃO -->
-    <select id="duracao">
-      <option value="15s">15 segundos</option>
-      <option value="30s">30 segundos</option>
-      <option value="58s">58 segundos</option>
+    <select id="estilo">
+      <option value="Bíblico">Bíblico</option>
+      <option value="Anime">Anime</option>
+      <option value="Tecnologia">Tecnologia</option>
+      <option value="Curiosidades">Curiosidades</option>
+      <option value="Dark">Dark</option>
     </select>
 
-    <!-- ESTILO -->
-    <select id="estilo">
-      <option value="bíblico">Bíblico</option>
-      <option value="anime">Anime</option>
-      <option value="tecnologia">Tecnologia</option>
-      <option value="curiosidade">Curiosidades</option>
-      <option value="dark">Dark / Viral</option>
+    <select id="duracao">
+      <option value="15 segundos">15 segundos</option>
+      <option value="30 segundos">30 segundos</option>
+      <option value="58 segundos">58 segundos</option>
     </select>
 
     <button id="btnGerar" onclick="gerar()">GERAR ROTEIRO</button>
