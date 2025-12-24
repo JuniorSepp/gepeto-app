@@ -1,4 +1,4 @@
-async function gerar() {
+function gerar() {
   const tema = document.getElementById("tema").value.trim();
   const plataforma = document.getElementById("plataforma").value;
   const duracao = document.getElementById("duracao").value;
@@ -7,94 +7,76 @@ async function gerar() {
   const resultado = document.getElementById("resultado");
   const btnCopiar = document.getElementById("copiar");
 
-  // Validação mínima (SEM categoria)
   if (!tema) {
-    resultado.textContent = "⚠️ Digite um TEMA para o vídeo.";
+    resultado.textContent = "⚠️ Digite um tema para o vídeo.";
     btnCopiar.style.display = "none";
     return;
   }
 
-  resultado.textContent = "⏳ Gerando roteiro viral...";
-  btnCopiar.style.display = "none";
+  // 🔥 GERADOR LOCAL (NÃO QUEBRA)
+  const roteiro = gerarRoteiroLocal(tema, plataforma, duracao, estilo);
 
-  const prompt = `
-Você é o GEPETO, especialista em roteiros virais para vídeos curtos.
+  resultado.textContent = roteiro;
+  btnCopiar.style.display = "block";
+}
 
-DADOS:
-TEMA: ${tema}
-PLATAFORMA: ${plataforma}
-DURAÇÃO: ${duracao}
-ESTILO: ${estilo}
-
-INTERPRETAÇÃO DO ESTILO:
-- Anime → épico, confronto, detalhe oculto
-- Bíblico → solene, espiritual, revelação
-- Tecnologia → alerta, impacto, futuro
-- Curiosidade → surpresa, revelação
-- Dark → mistério, tensão psicológica
-
-REGRAS:
-- NÃO pedir informações
-- NÃO validar campos
-- Criar narrativa falável
-- Pensar como algoritmo
-- Prender atenção nos primeiros 3 segundos
-
-FORMATO FIXO:
-
+function gerarRoteiroLocal(tema, plataforma, duracao, estilo) {
+  return `
 VIDEO_SCRIPT:
+
 CENA 1 (0–3s):
-Voz:
-Texto na tela:
-Visual:
+Voz: "${gancho(estilo, tema)}"
+Texto na tela: ${tema.toUpperCase()}
+Visual: Close dramático + corte rápido
 
 CENA 2 (3–7s):
-Voz:
-Texto na tela:
-Visual:
+Voz: "${meio(estilo)}"
+Texto na tela: "Poucos percebem isso…"
+Visual: Detalhe revelador + slow motion
 
 CENA FINAL (7–${duracao}):
-Voz:
-Texto na tela:
-Visual:
+Voz: "${final(estilo)}"
+Texto na tela: "Assista até o fim"
+Visual: Fade + impacto emocional
 
 CAPCUT_PROMPT:
+Formato ${plataforma}, vertical 9:16, estilo ${estilo}, música intensa, cortes rápidos, zoom leve, legenda grande.
+
 RETENCAO_HOOK:
+"${gancho(estilo, tema)}"
+
 LOOP_FINAL:
+"Agora volta e repara nesse detalhe."
+
 THUMBNAIL:
-TEXTO:
-EMOÇÃO:
-VISUAL:
+TEXTO: ${tema.split(" ").slice(0,3).join(" ").toUpperCase()}
+EMOÇÃO: Impacto
+VISUAL: Close forte + contraste alto
 `;
+}
 
-  try {
-    const response = await fetch("SUA_API_AQUI", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer SUA_CHAVE_AQUI"
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.8
-      })
-    });
+function gancho(estilo, tema) {
+  if (estilo === "Bíblico") return `Isso está acontecendo agora e quase ninguém percebe…`;
+  if (estilo === "Anime") return `Esse momento muda tudo em ${tema}`;
+  if (estilo === "Tecnologia") return `Isso está sendo escondido de você`;
+  if (estilo === "Dark") return `Algo está errado… e você vai entender agora`;
+  return `Você nunca reparou nisso`;
+}
 
-    const data = await response.json();
-    const texto = data.choices?.[0]?.message?.content;
+function meio(estilo) {
+  if (estilo === "Bíblico") return `A Bíblia já avisava, mas poucos prestaram atenção`;
+  if (estilo === "Anime") return `Esse detalhe muda o significado da cena`;
+  if (estilo === "Tecnologia") return `O sistema não quer que você perceba`;
+  if (estilo === "Dark") return `Quando você entende, não tem mais volta`;
+  return `Veja com atenção`;
+}
 
-    if (!texto) {
-      resultado.textContent = "⚠️ A IA não retornou conteúdo.";
-      return;
-    }
-
-    resultado.textContent = texto;
-    btnCopiar.style.display = "block";
-
-  } catch (e) {
-    resultado.textContent = "❌ Erro ao gerar roteiro.";
-  }
+function final(estilo) {
+  if (estilo === "Bíblico") return `Quem tem ouvidos, ouça`;
+  if (estilo === "Anime") return `Agora você não vai mais assistir igual`;
+  if (estilo === "Tecnologia") return `Depois disso, nada é igual`;
+  if (estilo === "Dark") return `Você foi avisado`;
+  return `Agora você sabe`;
 }
 
 function copiar() {
