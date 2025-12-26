@@ -1,32 +1,46 @@
-// === função que será chamada pelo botão ===
-function gerarRoteiro() {
-  const tema = document.getElementById("tema").value || "";
-  const categoria = document.getElementById("categoria").value || "";
+const btn = document.getElementById("gerar");
+const resultado = document.getElementById("resultado");
 
-  const resultadoDiv = document.getElementById("resultado");
-  resultadoDiv.innerText = "Gerando roteiro...";
+btn.addEventListener("click", async () => {
+  const tema = document.getElementById("tema").value.trim();
+  const categoria = document.getElementById("categoria").value;
 
-  fetch("https://SEU_DOMINIO.n8n.cloud/webhook/gepeto", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      tema: tema,
-      categoria: categoria,
-      duracao: "30s"
-    })
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log("API RETORNOU:", data); // importante para debug
-      resultadoDiv.innerText = data.roteiro || "Roteiro vazio";
-    })
-    .catch(error => {
-      console.error("ERRO NO FETCH:", error);
-      resultadoDiv.innerText = "Erro ao gerar roteiro.";
-    });
-}
+  if (!tema) {
+    resultado.innerText = "Digite um tema.";
+    return;
+  }
 
-// === adiciona o evento de clique ao botão ===
-document.getElementById("btnGerar").addEventListener("click", gerarRoteiro);
+  resultado.innerText = "Gerando roteiro...";
+
+  try {
+    const response = await fetch(
+      "https://SEU_DOMINIO.n8n.cloud/webhook/gepeto",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          tema,
+          categoria
+        })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Erro HTTP");
+    }
+
+    const data = await response.json();
+
+    if (!data.roteiro || data.roteiro.trim() === "") {
+      throw new Error("Roteiro vazio");
+    }
+
+    resultado.innerText = data.roteiro;
+
+  } catch (err) {
+    console.error(err);
+    resultado.innerText = "Erro ao gerar roteiro.";
+  }
+});
