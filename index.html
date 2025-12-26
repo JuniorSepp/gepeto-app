@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gepeto Shorts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <h1>Gepeto Shorts</h1>
+  <h1>🎬 Gepeto Shorts</h1>
   <p>Roteiros virais prontos para CapCut / Shorts / Reels</p>
 
-  <input type="text" id="tema" placeholder="Digite o tema (ex: Naruto, Apocalipse)" />
+  <input
+    type="text"
+    id="tema"
+    placeholder="Digite o tema (ex: Naruto, Deus, Apocalipse)"
+  />
 
   <select id="categoria">
     <option value="Dark psicológico">Dark psicológico</option>
-    <option value="Educacional">Educacional</option>
     <option value="Bíblico">Bíblico</option>
-    <option value="Comédia">Comédia</option>
+    <option value="Anime">Anime</option>
+    <option value="Curiosidade">Curiosidade</option>
   </select>
 
-  <button id="btnGerar">GERAR ROTEIROS</button>
+  <button id="gerar">GERAR ROTEIRO</button>
 
-  <div id="resultado" style="white-space: pre-wrap; margin-top: 20px;"></div>
+  <pre id="resultado"></pre>
 
-  <!-- o script precisa estar aqui -->
   <script src="app.js"></script>
 </body>
 </html>
