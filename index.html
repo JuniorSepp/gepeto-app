@@ -4,29 +4,52 @@
   <meta charset="UTF-8" />
   <title>Gepeto Shorts</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+    input, select, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      font-size: 16px;
+    }
+    button {
+      cursor: pointer;
+    }
+    pre {
+      white-space: pre-wrap;
+      background: #111;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 6px;
+    }
+  </style>
 </head>
+
 <body>
 
   <h1>🎬 Gepeto Shorts</h1>
   <p>Roteiros virais prontos para CapCut / Shorts / Reels</p>
 
-  <input
-    type="text"
-    id="tema"
-    placeholder="Digite o tema (ex: Naruto, Deus, Apocalipse)"
-  />
+  <input id="tema" placeholder="Digite o tema (ex: Naruto, Deus, Psicologia)" />
 
   <select id="categoria">
-    <option value="Dark psicológico">Dark psicológico</option>
-    <option value="Bíblico">Bíblico</option>
-    <option value="Anime">Anime</option>
-    <option value="Curiosidade">Curiosidade</option>
+    <option value="dark psicológico">Dark psicológico</option>
+    <option value="motivacional">Motivacional</option>
+    <option value="curiosidade">Curiosidade</option>
   </select>
 
-  <button id="gerar">GERAR ROTEIRO</button>
+  <button onclick="gerarRoteiro()">GERAR ROTEIRO</button>
 
-  <pre id="resultado"></pre>
+  <pre id="resultado">Aguardando geração...</pre>
 
   <script src="app.js"></script>
 </body>
