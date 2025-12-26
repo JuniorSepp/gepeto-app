@@ -1,12 +1,10 @@
-const btn = document.getElementById("gerar");
+// === função que será chamada pelo botão ===
+function gerarRoteiro() {
+  const tema = document.getElementById("tema").value || "";
+  const categoria = document.getElementById("categoria").value || "";
 
-btn.addEventListener("click", () => {
-  const temaSelecionado = document.getElementById("tema").value;
-  const categoriaSelecionada = document.getElementById("categoria").value;
-  const duracaoSelecionada = document.getElementById("duracao").value;
-
-  const resultado = document.getElementById("resultado");
-  resultado.innerText = "Gerando roteiro...";
+  const resultadoDiv = document.getElementById("resultado");
+  resultadoDiv.innerText = "Gerando roteiro...";
 
   fetch("https://SEU_DOMINIO.n8n.cloud/webhook/gepeto", {
     method: "POST",
@@ -14,17 +12,21 @@ btn.addEventListener("click", () => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      tema: temaSelecionado,
-      categoria: categoriaSelecionada,
-      duracao: duracaoSelecionada
+      tema: tema,
+      categoria: categoria,
+      duracao: "30s"
     })
   })
     .then(res => res.json())
     .then(data => {
-      resultado.innerText = data.roteiro;
+      console.log("API RETORNOU:", data); // importante para debug
+      resultadoDiv.innerText = data.roteiro || "Roteiro vazio";
     })
-    .catch(err => {
-      console.error(err);
-      resultado.innerText = "Erro ao gerar roteiro.";
+    .catch(error => {
+      console.error("ERRO NO FETCH:", error);
+      resultadoDiv.innerText = "Erro ao gerar roteiro.";
     });
-});
+}
+
+// === adiciona o evento de clique ao botão ===
+document.getElementById("btnGerar").addEventListener("click", gerarRoteiro);
