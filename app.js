@@ -1,41 +1,28 @@
 async function gerarRoteiro() {
   const tema = document.getElementById("tema").value;
   const categoria = document.getElementById("categoria").value;
-  const resultado = document.getElementById("resultado");
 
-  if (!tema) {
-    resultado.innerText = "⚠️ Digite um tema primeiro.";
-    return;
-  }
-
-  resultado.innerText = "⏳ Gerando roteiro...";
+  document.getElementById("resultado").innerText = "Gerando roteiro...";
 
   try {
-    const response = await fetch("https://SEU_DOMINIO.n8n.cloud/webhook/gepeto", {
+    const res = await fetch("https://SEU_SUBDOMINIO.n8n.cloud/webhook/gepeto", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        tema,
-        categoria
-      })
+      body: JSON.stringify({ tema, categoria })
     });
 
-    if (!response.ok) {
-      throw new Error("Erro HTTP: " + response.status);
-    }
+    if (!res.ok) throw new Error("Erro HTTP");
 
-    const data = await response.json();
+    const data = await res.json();
 
-    if (!data || !data.roteiro) {
-      throw new Error("Resposta sem roteiro");
-    }
+    if (!data.roteiro) throw new Error("Roteiro vazio");
 
-    resultado.innerText = data.roteiro;
+    document.getElementById("resultado").innerText = data.roteiro;
 
-  } catch (err) {
-    console.error(err);
-    resultado.innerText = "❌ Erro ao gerar roteiro.\n" + err.message;
+  } catch (e) {
+    document.getElementById("resultado").innerText =
+      "Erro ao gerar roteiro. Failed to fetch";
   }
 }
