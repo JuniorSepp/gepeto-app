@@ -1,27 +1,48 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <title>Gepeto App</title>
   <style>
-    body { background:#000; color:#fff; font-family:sans-serif; padding:20px }
-    input, button { width:100%; padding:12px; margin:10px 0 }
-    button { background:red; color:white; border:none; font-weight:bold }
-    #erro { color:#ff4d4d }
-    #resultado { white-space:pre-wrap; margin-top:20px }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      background: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #resultado {
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+    #erro {
+      color: #ff4d4d;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
-<h1>🎬 Gepeto App</h1>
-<p>Roteiros virais para Shorts, Reels e TikTok</p>
+  <h1>🎬 Gepeto App</h1>
+  <p>Roteiros virais para Shorts, Reels e TikTok</p>
 
-<input id="tema" placeholder="Digite o tema" />
-<button onclick="gerarRoteiro()">GERAR ROTEIRO</button>
+  <input id="tema" placeholder="Digite um tema (ex: mistério, curiosidade)" />
+  <button id="gerar">GERAR ROTEIRO</button>
 
-<div id="erro"></div>
-<div id="resultado"></div>
+  <div id="erro"></div>
+  <div id="resultado"></div>
 
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
