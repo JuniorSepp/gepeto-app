@@ -2,98 +2,61 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gepeto App</title>
-
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #000;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 420px;
-      padding: 20px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 8px;
-    }
-
-    p {
-      font-size: 14px;
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
-      margin-bottom: 12px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      background: #e50914;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .resultado {
-      margin-top: 20px;
-      text-align: left;
-      white-space: pre-wrap;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .erro {
-      margin-top: 15px;
-      color: #ff4d4d;
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css"/>
 </head>
-
 <body>
-  <div class="container">
-    <h1>🎬 Gepeto App</h1>
-    <p>Roteiros virais para Shorts, Reels e TikTok</p>
 
-    <input
+  <main class="container">
+    <h1>🎬 Gepeto App</h1>
+    <p class="subtitle">Roteiros virais para Shorts, Reels e TikTok</p>
+
+    <!-- TEMA -->
+    <input 
       id="tema"
       type="text"
-      placeholder="Ex: Naruto lutando contra samurai"
+      placeholder="Digite o tema (ex: Naruto, Deus, Terra...)"
     />
 
-    <button id="btn">GERAR ROTEIRO</button>
+    <!-- FORMATO -->
+    <select id="formato">
+      <option value="shorts">Shorts (até 30s)</option>
+      <option value="reels">Reels (até 58s)</option>
+      <option value="tiktok">TikTok agressivo (hook 3s)</option>
+    </select>
 
-    <div id="erro" class="erro"></div>
-    <div id="resultado" class="resultado"></div>
-  </div>
+    <!-- NICHO -->
+    <select id="nicho">
+      <option value="curiosidades">Curiosidades</option>
+      <option value="biblia">Bíblia / Deus</option>
+      <option value="anime">Anime</option>
+      <option value="motivacional">Motivacional</option>
+    </select>
+
+    <!-- MODO VIRAL -->
+    <select id="modo">
+      <option value="normal">Normal</option>
+      <option value="agressivo">Agressivo</option>
+      <option value="clickbait">Clickbait extremo</option>
+    </select>
+
+    <!-- BOTÃO -->
+    <button id="gerar">GERAR ROTEIRO</button>
+
+    <!-- AÇÕES -->
+    <div class="acoes">
+      <button id="copiar">📋 Copiar roteiro</button>
+      <button id="limpar">🗑 Limpar</button>
+    </div>
+
+    <!-- RESULTADO -->
+    <pre id="resultado"></pre>
+
+    <!-- HISTÓRICO -->
+    <h2>📜 Histórico</h2>
+    <ul id="historico"></ul>
+  </main>
 
   <script src="app.js"></script>
 </body>
