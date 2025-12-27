@@ -2,54 +2,98 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Gepeto App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gepeto App</title>
+
   <style>
     body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
       background: #000;
       color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
       padding: 20px;
+      text-align: center;
     }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
     input {
-      width: 90%;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      border: none;
-    }
-    button {
-      width: 95%;
+      width: 100%;
       padding: 14px;
-      background: red;
-      color: white;
-      font-size: 16px;
+      border-radius: 8px;
       border: none;
-      border-radius: 6px;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background: #e50914;
+      color: #fff;
       cursor: pointer;
     }
-    #resultado {
-      white-space: pre-wrap;
-      margin-top: 20px;
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
-    #erro {
-      color: red;
-      margin-top: 10px;
-      display: none;
+
+    .resultado {
+      margin-top: 20px;
+      text-align: left;
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .erro {
+      margin-top: 15px;
+      color: #ff4d4d;
+      font-weight: bold;
     }
   </style>
 </head>
+
 <body>
+  <div class="container">
+    <h1>🎬 Gepeto App</h1>
+    <p>Roteiros virais para Shorts, Reels e TikTok</p>
 
-  <h1>🎬 Gepeto App</h1>
-  <p>Roteiros virais para Shorts, Reels e TikTok</p>
+    <input
+      id="tema"
+      type="text"
+      placeholder="Ex: Naruto lutando contra samurai"
+    />
 
-  <input id="prompt" placeholder="Digite o tema do vídeo" />
-  <button id="gerar">GERAR ROTEIRO</button>
+    <button id="btn">GERAR ROTEIRO</button>
 
-  <div id="erro"></div>
-  <pre id="resultado"></pre>
+    <div id="erro" class="erro"></div>
+    <div id="resultado" class="resultado"></div>
+  </div>
 
   <script src="app.js"></script>
 </body>
