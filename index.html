@@ -2,55 +2,89 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Gepeto Shorts</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gepeto App — Roteiros Virais</title>
+
   <style>
     body {
-      background: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0b0b0b;
+      color: #ffffff;
+    }
+
+    .app {
+      max-width: 600px;
+      margin: auto;
       padding: 20px;
     }
+
     h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
+      text-align: center;
+      margin-bottom: 8px;
     }
-    input, select, button {
-      padding: 10px;
-      margin: 5px 0;
+
+    p {
+      text-align: center;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    input {
       width: 100%;
+      padding: 14px;
       font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      margin-bottom: 12px;
+      outline: none;
     }
+
     button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      background: #e50914;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
-    pre {
-      white-space: pre-wrap;
-      background: #111;
-      padding: 15px;
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #resultado {
       margin-top: 20px;
-      border-radius: 6px;
     }
   </style>
 </head>
 
 <body>
+  <div class="app">
+    <h1>🎬 Gepeto App</h1>
+    <p>Roteiros virais para Shorts, Reels e TikTok</p>
 
-  <h1>🎬 Gepeto Shorts</h1>
-  <p>Roteiros virais prontos para CapCut / Shorts / Reels</p>
+    <!-- CAMPO ÚNICO -->
+    <input
+      id="tema"
+      type="text"
+      placeholder="Digite o tema do vídeo (ex: Naruto, Deus, Curiosidade chocante...)"
+    />
 
-  <input id="tema" placeholder="Digite o tema (ex: Naruto, Deus, Psicologia)" />
+    <!-- BOTÃO -->
+    <button id="btnGerar" onclick="gerar()">
+      GERAR ROTEIRO
+    </button>
 
-  <select id="categoria">
-    <option value="dark psicológico">Dark psicológico</option>
-    <option value="motivacional">Motivacional</option>
-    <option value="curiosidade">Curiosidade</option>
-  </select>
+    <!-- RESULTADO -->
+    <div id="resultado"></div>
+  </div>
 
-  <button onclick="gerarRoteiro()">GERAR ROTEIRO</button>
-
-  <pre id="resultado">Aguardando geração...</pre>
-
+  <!-- SCRIPT -->
   <script src="app.js"></script>
 </body>
 </html>
