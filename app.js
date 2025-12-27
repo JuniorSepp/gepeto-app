@@ -1,38 +1,46 @@
-const btn = document.getElementById("btn-gerar");
-const input = document.getElementById("tema");
+const webhookURL = "https://wjr.app.n8n.cloud/webhook/gepeto"; 
+// ⚠️ Use a URL DE PRODUÇÃO do n8n
+
+const temaInput = document.getElementById("tema");
+const formatoSelect = document.getElementById("formato");
+const nichoSelect = document.getElementById("nicho");
+const modoSelect = document.getElementById("modo");
 const resultado = document.getElementById("resultado");
+const historicoEl = document.getElementById("historico");
 
-// ⚠️ ATENÇÃO: use sempre a URL DE PRODUÇÃO do n8n
-const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gepeto";
+document.getElementById("gerar").onclick = gerarRoteiro;
+document.getElementById("copiar").onclick = copiarRoteiro;
+document.getElementById("limpar").onclick = limparTela;
 
-btn.addEventListener("click", async () => {
-  const tema = input.value.trim();
+carregarHistorico();
 
-  // 🔒 Validação básica
-  if (!tema || tema.length < 3) {
-    resultado.innerText = "Digite um tema válido para gerar o roteiro.";
+/* =========================
+   FUNÇÕES PRINCIPAIS
+========================= */
+
+async function gerarRoteiro() {
+  const tema = temaInput.value.trim();
+
+  if (!tema) {
+    resultado.innerText = "Digite um tema para gerar o roteiro.";
     return;
   }
 
-  // ⏳ Feedback visual
   resultado.innerText = "⏳ Gerando roteiro...";
 
   try {
-    const response = await fetch(WEBHOOK_URL, {
+    const response = await fetch(webhookURL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ tema }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tema,
+        formato: formatoSelect.value,
+        nicho: nichoSelect.value,
+        modo: modoSelect.value
+      })
     });
 
-    if (!response.ok) {
-      throw new Error("Erro HTTP: " + response.status);
-    }
-
     const data = await response.json();
-
-    // ✅ TRATAMENTO FINAL DO TEXTO
     const texto = data.roteiro?.trim();
 
     if (!texto) {
@@ -41,9 +49,43 @@ btn.addEventListener("click", async () => {
     }
 
     resultado.innerText = texto;
+    salvarHistorico(tema, texto);
 
-  } catch (error) {
-    console.error("Erro:", error);
+  } catch (err) {
     resultado.innerText = "Erro ao gerar roteiro. Verifique o webhook.";
   }
-});
+}
+
+function copiarRoteiro() {
+  if (!resultado.innerText) return;
+  navigator.clipboard.writeText(resultado.innerText);
+  alert("Roteiro copiado!");
+}
+
+function limparTela() {
+  resultado.innerText = "";
+  temaInput.value = "";
+}
+
+/* =========================
+   HISTÓRICO (localStorage)
+========================= */
+
+function salvarHistorico(tema, roteiro) {
+  const historico = JSON.parse(localStorage.getItem("gepeto_historico")) || [];
+  historico.unshift({ tema, roteiro, data: Date.now() });
+  localStorage.setItem("gepeto_historico", JSON.stringify(historico.slice(0, 10)));
+  carregarHistorico();
+}
+
+function carregarHistorico() {
+  historicoEl.innerHTML = "";
+  const historico = JSON.parse(localStorage.getItem("gepeto_historico")) || [];
+
+  historico.forEach(item => {
+    const li = document.createElement("li");
+    li.innerText = item.tema;
+    li.onclick = () => resultado.innerText = item.roteiro;
+    historicoEl.appendChild(li);
+  });
+}
