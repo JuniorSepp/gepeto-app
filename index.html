@@ -2,89 +2,26 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gepeto App — Roteiros Virais</title>
-
+  <title>Gepeto App</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #0b0b0b;
-      color: #ffffff;
-    }
-
-    .app {
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 8px;
-    }
-
-    p {
-      text-align: center;
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: none;
-      margin-bottom: 12px;
-      outline: none;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: bold;
-      background: #e50914;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    #resultado {
-      margin-top: 20px;
-    }
+    body { background:#000; color:#fff; font-family:sans-serif; padding:20px }
+    input, button { width:100%; padding:12px; margin:10px 0 }
+    button { background:red; color:white; border:none; font-weight:bold }
+    #erro { color:#ff4d4d }
+    #resultado { white-space:pre-wrap; margin-top:20px }
   </style>
 </head>
-
 <body>
-  <div class="app">
-    <h1>🎬 Gepeto App</h1>
-    <p>Roteiros virais para Shorts, Reels e TikTok</p>
 
-    <!-- CAMPO ÚNICO -->
-    <input
-      id="tema"
-      type="text"
-      placeholder="Digite o tema do vídeo (ex: Naruto, Deus, Curiosidade chocante...)"
-    />
+<h1>🎬 Gepeto App</h1>
+<p>Roteiros virais para Shorts, Reels e TikTok</p>
 
-    <!-- BOTÃO -->
-    <button id="btnGerar" onclick="gerar()">
-      GERAR ROTEIRO
-    </button>
+<input id="tema" placeholder="Digite o tema" />
+<button onclick="gerarRoteiro()">GERAR ROTEIRO</button>
 
-    <!-- RESULTADO -->
-    <div id="resultado"></div>
-  </div>
+<div id="erro"></div>
+<div id="resultado"></div>
 
-  <!-- SCRIPT -->
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
