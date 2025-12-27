@@ -1,34 +1,48 @@
-async function gerarRoteiro() {
-  const tema = document.getElementById("tema").value;
-  const resultado = document.getElementById("resultado");
-  const erro = document.getElementById("erro");
+const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gepeto";
 
-  erro.textContent = "";
-  resultado.textContent = "Gerando roteiro...";
+const button = document.getElementById("gerar");
+const input = document.getElementById("prompt");
+const output = document.getElementById("resultado");
+const error = document.getElementById("erro");
+
+button.addEventListener("click", async () => {
+  const prompt = input.value.trim();
+
+  error.style.display = "none";
+  output.textContent = "⏳ Gerando roteiro...";
+
+  if (!prompt) {
+    output.textContent = "";
+    error.textContent = "Digite um tema.";
+    error.style.display = "block";
+    return;
+  }
 
   try {
-    const res = await fetch("https://wjr.app.n8n.cloud/webhook/gepeto", {
+    const response = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ tema })
+      body: JSON.stringify({ prompt })
     });
 
-    if (!res.ok) {
-      throw new Error("Erro HTTP: " + res.status);
+    if (!response.ok) {
+      throw new Error("Erro HTTP: " + response.status);
     }
 
-    const data = await res.json();
+    const data = await response.json();
 
     if (!data.roteiro) {
-      throw new Error("Resposta sem roteiro");
+      throw new Error("Resposta inválida do webhook");
     }
 
-    resultado.textContent = data.roteiro;
-  } catch (e) {
-    console.error(e);
-    resultado.textContent = "";
-    erro.textContent = "❌ Erro ao gerar roteiro. Verifique o webhook.";
+    output.textContent = data.roteiro;
+
+  } catch (err) {
+    output.textContent = "";
+    error.textContent = "❌ Erro ao gerar roteiro. Verifique o webhook.";
+    error.style.display = "block";
+    console.error(err);
   }
-}
+});
