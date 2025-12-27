@@ -1,46 +1,43 @@
-const webhookURL = "https://wjr.app.n8n.cloud/webhook/gepeto"; 
-// ⚠️ Use a URL DE PRODUÇÃO do n8n
-
-const temaInput = document.getElementById("tema");
-const formatoSelect = document.getElementById("formato");
-const nichoSelect = document.getElementById("nicho");
-const modoSelect = document.getElementById("modo");
+const form = document.getElementById("form");
+const inputTema = document.getElementById("tema");
 const resultado = document.getElementById("resultado");
-const historicoEl = document.getElementById("historico");
+const btnCopiar = document.getElementById("copiar");
+const selectFormato = document.getElementById("formato");
+const selectNicho = document.getElementById("nicho");
+const selectModo = document.getElementById("modo");
 
-document.getElementById("gerar").onclick = gerarRoteiro;
-document.getElementById("copiar").onclick = copiarRoteiro;
-document.getElementById("limpar").onclick = limparTela;
+const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gepeto";
 
-carregarHistorico();
+// =========================
+// SUBMIT
+// =========================
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-/* =========================
-   FUNÇÕES PRINCIPAIS
-========================= */
-
-async function gerarRoteiro() {
-  const tema = temaInput.value.trim();
-
+  const tema = inputTema.value.trim();
   if (!tema) {
     resultado.innerText = "Digite um tema para gerar o roteiro.";
     return;
   }
 
-  resultado.innerText = "⏳ Gerando roteiro...";
+  resultado.innerText = "Gerando roteiro... ⏳";
 
   try {
-    const response = await fetch(webhookURL, {
+    const response = await fetch(WEBHOOK_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         tema,
-        formato: formatoSelect.value,
-        nicho: nichoSelect.value,
-        modo: modoSelect.value
+        formato: selectFormato.value,
+        nicho: selectNicho.value,
+        modo: selectModo.value
       })
     });
 
     const data = await response.json();
+
     const texto = data.roteiro?.trim();
 
     if (!texto) {
@@ -48,44 +45,81 @@ async function gerarRoteiro() {
       return;
     }
 
-    resultado.innerText = texto;
-    salvarHistorico(tema, texto);
+    renderRoteiro(texto);
+    salvarHistorico(texto);
 
-  } catch (err) {
+  } catch (error) {
+    console.error(error);
     resultado.innerText = "Erro ao gerar roteiro. Verifique o webhook.";
   }
-}
+});
 
-function copiarRoteiro() {
-  if (!resultado.innerText) return;
-  navigator.clipboard.writeText(resultado.innerText);
-  alert("Roteiro copiado!");
-}
+// =========================
+// RENDER ROTEIRO (PRO)
+// =========================
+function renderRoteiro(texto) {
+  resultado.innerHTML = "";
 
-function limparTela() {
-  resultado.innerText = "";
-  temaInput.value = "";
-}
+  const linhas = texto.split("\n");
 
-/* =========================
-   HISTÓRICO (localStorage)
-========================= */
+  linhas.forEach(linha => {
+    const p = document.createElement("p");
 
-function salvarHistorico(tema, roteiro) {
-  const historico = JSON.parse(localStorage.getItem("gepeto_historico")) || [];
-  historico.unshift({ tema, roteiro, data: Date.now() });
-  localStorage.setItem("gepeto_historico", JSON.stringify(historico.slice(0, 10)));
-  carregarHistorico();
-}
+    if (linha.startsWith("**")) {
+      p.innerHTML = linha.replace(/\*\*/g, "");
+      p.style.fontWeight = "bold";
+      p.style.marginTop = "12px";
+    } else {
+      p.innerText = linha;
+    }
 
-function carregarHistorico() {
-  historicoEl.innerHTML = "";
-  const historico = JSON.parse(localStorage.getItem("gepeto_historico")) || [];
-
-  historico.forEach(item => {
-    const li = document.createElement("li");
-    li.innerText = item.tema;
-    li.onclick = () => resultado.innerText = item.roteiro;
-    historicoEl.appendChild(li);
+    resultado.appendChild(p);
   });
+
+  btnCopiar.style.display = "block";
 }
+
+// =========================
+// COPIAR
+// =========================
+btnCopiar.addEventListener("click", () => {
+  const texto = resultado.innerText;
+  navigator.clipboard.writeText(texto);
+  btnCopiar.innerText = "Copiado ✅";
+
+  setTimeout(() => {
+    btnCopiar.innerText = "Copiar roteiro";
+  }, 2000);
+});
+
+// =========================
+// HISTÓRICO
+// =========================
+function salvarHistorico(roteiro) {
+  const historico = JSON.parse(localStorage.getItem("historicoRoteiros")) || [];
+  historico.unshift({
+    roteiro,
+    data: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("historicoRoteiros", JSON.stringify(historico.slice(0, 10)));
+}
+
+// =========================
+// PROMPT INTELIGENTE
+// =========================
+inputTema.addEventListener("input", () => {
+  const valor = inputTema.value.toLowerCase();
+
+  if (valor.includes("naruto")) {
+    selectNicho.value = "anime";
+  }
+
+  if (valor.includes("deus") || valor.includes("bíblia")) {
+    selectNicho.value = "biblia";
+  }
+
+  if (valor.includes("motivação") || valor.includes("superar")) {
+    selectNicho.value = "motivacional";
+  }
+});
