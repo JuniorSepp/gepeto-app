@@ -1,34 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <title>Gepeto App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       background: #000;
       color: #fff;
       font-family: Arial, sans-serif;
+      text-align: center;
       padding: 20px;
     }
-    input, button {
-      width: 100%;
-      padding: 15px;
-      margin-top: 10px;
-      font-size: 16px;
+    input {
+      width: 90%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: none;
     }
     button {
+      width: 95%;
+      padding: 14px;
       background: red;
       color: white;
+      font-size: 16px;
       border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
     #resultado {
-      margin-top: 20px;
       white-space: pre-wrap;
+      margin-top: 20px;
     }
     #erro {
-      color: #ff4d4d;
+      color: red;
       margin-top: 10px;
+      display: none;
     }
   </style>
 </head>
@@ -37,11 +45,11 @@
   <h1>🎬 Gepeto App</h1>
   <p>Roteiros virais para Shorts, Reels e TikTok</p>
 
-  <input id="tema" placeholder="Digite um tema (ex: mistério, curiosidade)" />
+  <input id="prompt" placeholder="Digite o tema do vídeo" />
   <button id="gerar">GERAR ROTEIRO</button>
 
   <div id="erro"></div>
-  <div id="resultado"></div>
+  <pre id="resultado"></pre>
 
   <script src="app.js"></script>
 </body>
