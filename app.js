@@ -1,34 +1,29 @@
-const btn = document.getElementById("btn");
+const btn = document.getElementById("btn-gerar");
 const input = document.getElementById("tema");
 const resultado = document.getElementById("resultado");
-const erro = document.getElementById("erro");
 
-// 👉 URL DE PRODUÇÃO DO N8N
+// ⚠️ ATENÇÃO: use sempre a URL DE PRODUÇÃO do n8n
 const WEBHOOK_URL = "https://wjr.app.n8n.cloud/webhook/gepeto";
 
 btn.addEventListener("click", async () => {
   const tema = input.value.trim();
 
-  resultado.textContent = "";
-  erro.textContent = "";
-
-  if (!tema) {
-    erro.textContent = "Digite um tema para gerar o roteiro.";
+  // 🔒 Validação básica
+  if (!tema || tema.length < 3) {
+    resultado.innerText = "Digite um tema válido para gerar o roteiro.";
     return;
   }
 
-  btn.disabled = true;
-  btn.textContent = "GERANDO...";
+  // ⏳ Feedback visual
+  resultado.innerText = "⏳ Gerando roteiro...";
 
   try {
     const response = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        tema: tema
-      })
+      body: JSON.stringify({ tema }),
     });
 
     if (!response.ok) {
@@ -37,16 +32,18 @@ btn.addEventListener("click", async () => {
 
     const data = await response.json();
 
-    if (!data.roteiro) {
-      throw new Error("Resposta inválida do servidor.");
+    // ✅ TRATAMENTO FINAL DO TEXTO
+    const texto = data.roteiro?.trim();
+
+    if (!texto) {
+      resultado.innerText = "Não foi possível gerar o roteiro.";
+      return;
     }
 
-    resultado.textContent = data.roteiro;
-  } catch (e) {
-    console.error(e);
-    erro.textContent = "Erro ao gerar roteiro. Verifique o webhook.";
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "GERAR ROTEIRO";
+    resultado.innerText = texto;
+
+  } catch (error) {
+    console.error("Erro:", error);
+    resultado.innerText = "Erro ao gerar roteiro. Verifique o webhook.";
   }
 });
