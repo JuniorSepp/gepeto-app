@@ -1,76 +1,79 @@
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
 body {
-  margin: 0;
-  background: #000;
-  color: #fff;
-}
-
-.container {
-  max-width: 600px;
-  margin: auto;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont;
+  background: linear-gradient(180deg, #0b0b0b, #121212);
+  color: #f5f5f5;
   padding: 20px;
+  max-width: 720px;
+  margin: auto;
 }
 
 h1 {
   text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
-.subtitle {
-  text-align: center;
-  color: #aaa;
-  margin-bottom: 20px;
+form {
+  background: #181818;
+  padding: 20px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
 }
 
-input, select, button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: none;
-  font-size: 16px;
+.label {
+  font-size: 13px;
+  opacity: .7;
+}
+
+input, select {
+  background: #101010;
+  color: #fff;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 15px;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #ff0055;
 }
 
 button {
-  background: #e50914;
+  background: linear-gradient(135deg, #ff0055, #ff3d81);
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 800;
   color: #fff;
-  font-weight: bold;
   cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
 }
 
 button:hover {
-  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(255,0,85,.35);
 }
 
-.acoes {
-  display: flex;
-  gap: 10px;
-}
-
-pre {
-  background: #111;
-  padding: 15px;
-  margin-top: 20px;
+#resultado {
+  margin-top: 22px;
+  background: #181818;
+  padding: 20px;
+  border-radius: 14px;
+  line-height: 1.6;
   white-space: pre-wrap;
-  border-radius: 6px;
+  font-size: 15px;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  background: #111;
-  margin-top: 5px;
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-li:hover {
-  background: #222;
+#copiar {
+  margin-top: 14px;
+  background: #00e676;
+  color: #000;
+  font-weight: 800;
+  display: none;
 }
