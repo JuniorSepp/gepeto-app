@@ -2,119 +2,114 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gepeto App – Gerador de Roteiros Virais</title>
+  <title>Gepeto App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #0f0f0f;
+      background: #0b0b0b;
       color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
       padding: 20px;
-      max-width: 700px;
-      margin: auto;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 5px;
+    }
+
+    p {
+      text-align: center;
+      color: #aaa;
+      margin-top: 0;
     }
 
     form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      background: #1a1a1a;
-      padding: 16px;
-      border-radius: 8px;
+      max-width: 480px;
+      margin: 20px auto;
+      background: #141414;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,0,100,0.15);
     }
 
     input, select, button {
-      padding: 12px;
-      border-radius: 6px;
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 8px;
       border: none;
-      font-size: 16px;
+      font-size: 15px;
     }
 
     input, select {
-      background: #2a2a2a;
+      background: #1f1f1f;
       color: #fff;
     }
 
     button {
-      background: #ff0055;
+      background: linear-gradient(90deg, #ff0055, #ff3366);
       color: #fff;
       font-weight: bold;
       cursor: pointer;
+      transition: transform 0.2s ease;
     }
 
     button:hover {
-      opacity: 0.9;
+      transform: scale(1.03);
     }
 
-    #resultado {
-      margin-top: 20px;
-      background: #1a1a1a;
-      padding: 16px;
-      border-radius: 8px;
+    pre {
+      max-width: 700px;
+      margin: 30px auto;
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
       white-space: pre-wrap;
       line-height: 1.5;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
     }
 
     #copiar {
-      margin-top: 12px;
-      background: #00c853;
       display: none;
-    }
-
-    .label {
-      font-size: 14px;
-      opacity: 0.8;
+      margin: 10px auto;
+      background: #222;
+      border: 1px solid #444;
     }
   </style>
 </head>
 <body>
 
-  <h1>🔥 Gepeto App</h1>
-  <p style="text-align:center;opacity:0.8">
-    Gere roteiros virais para Shorts, Reels e TikTok
-  </p>
+  <h1>🎬 Gepeto App</h1>
+  <p>Roteiros virais para Shorts, Reels e TikTok</p>
 
   <form id="form">
-    
-    <span class="label">Tema do vídeo</span>
-    <input 
-      id="tema" 
-      placeholder="Ex: Naruto, Deus, curiosidades bizarras..."
-      autocomplete="off"
-    />
+    <input id="tema" placeholder="Tema do vídeo (ex: Naruto vs Samurai X)" required />
 
-    <span class="label">Formato</span>
     <select id="formato">
       <option value="shorts">Shorts (até 30s)</option>
       <option value="reels">Reels (até 58s)</option>
-      <option value="tiktok">TikTok agressivo (hook 3s)</option>
+      <option value="tiktok">TikTok agressivo</option>
     </select>
 
-    <span class="label">Nicho</span>
     <select id="nicho">
-      <option value="curiosidades">Curiosidades</option>
-      <option value="biblia">Bíblia / Deus</option>
       <option value="anime">Anime</option>
+      <option value="biblia">Bíblia / Deus</option>
+      <option value="curiosidades">Curiosidades</option>
       <option value="motivacional">Motivacional</option>
     </select>
 
-    <span class="label">Modo Viral</span>
     <select id="modo">
       <option value="normal">Normal</option>
       <option value="agressivo">Agressivo</option>
-      <option value="clickbait">Clickbait extremo</option>
+      <option value="clickbait">Clickbait Extremo</option>
     </select>
 
     <button type="submit">🚀 GERAR ROTEIRO</button>
   </form>
 
-  <div id="resultado"></div>
+  <pre id="resultado"></pre>
 
   <button id="copiar">📋 Copiar roteiro</button>
 
