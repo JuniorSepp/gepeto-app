@@ -1,118 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Gepeto App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <style>
-    body {
-      background: #0b0b0b;
-      color: #fff;
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-
-    p {
-      text-align: center;
-      color: #aaa;
-      margin-top: 0;
-    }
-
-    form {
-      max-width: 480px;
-      margin: 20px auto;
-      background: #141414;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(255,0,100,0.15);
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      border: none;
-      font-size: 15px;
-    }
-
-    input, select {
-      background: #1f1f1f;
-      color: #fff;
-    }
-
-    button {
-      background: linear-gradient(90deg, #ff0055, #ff3366);
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    button:hover {
-      transform: scale(1.03);
-    }
-
-    pre {
-      max-width: 700px;
-      margin: 30px auto;
-      background: #111;
-      padding: 20px;
-      border-radius: 12px;
-      white-space: pre-wrap;
-      line-height: 1.5;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    }
-
-    #copiar {
-      display: none;
-      margin: 10px auto;
-      background: #222;
-      border: 1px solid #444;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
 
-  <h1>🎬 Gepeto App</h1>
-  <p>Roteiros virais para Shorts, Reels e TikTok</p>
+<h2>🎬 Gepeto — Gerador de Roteiros Virais</h2>
 
-  <form id="form">
-    <input id="tema" placeholder="Tema do vídeo (ex: Naruto vs Samurai X)" required />
+<form id="form">
+  <input id="tema" placeholder="Digite o tema (ex: Naruto, Deus, Curiosidade)" required />
 
-    <select id="formato">
-      <option value="shorts">Shorts (até 30s)</option>
-      <option value="reels">Reels (até 58s)</option>
-      <option value="tiktok">TikTok agressivo</option>
-    </select>
+  <select id="formato">
+    <option value="shorts">Shorts (até 30s)</option>
+    <option value="reels">Reels (até 58s)</option>
+    <option value="tiktok">TikTok agressivo</option>
+  </select>
 
-    <select id="nicho">
-      <option value="anime">Anime</option>
-      <option value="biblia">Bíblia / Deus</option>
-      <option value="curiosidades">Curiosidades</option>
-      <option value="motivacional">Motivacional</option>
-    </select>
+  <select id="nicho">
+    <option value="anime">Anime</option>
+    <option value="biblia">Bíblia / Deus</option>
+    <option value="curiosidades">Curiosidades</option>
+  </select>
 
-    <select id="modo">
-      <option value="normal">Normal</option>
-      <option value="agressivo">Agressivo</option>
-      <option value="clickbait">Clickbait Extremo</option>
-    </select>
+  <select id="modo">
+    <option value="normal">Normal</option>
+    <option value="agressivo">Agressivo</option>
+    <option value="clickbait">Clickbait Extremo</option>
+  </select>
 
-    <button type="submit">🚀 GERAR ROTEIRO</button>
-  </form>
+  <button type="submit">GERAR ROTEIRO</button>
+</form>
 
-  <pre id="resultado"></pre>
+<pre id="resultado"></pre>
 
-  <button id="copiar">📋 Copiar roteiro</button>
+<button id="copiar" style="display:none;">📋 Copiar roteiro</button>
 
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
