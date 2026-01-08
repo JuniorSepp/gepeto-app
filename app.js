@@ -5,56 +5,46 @@ const copiarBtn = document.getElementById("copiar");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  resultado.textContent = "⏳ Gerando roteiro...";
+  resultado.innerText = "⏳ Gerando roteiro...";
   copiarBtn.style.display = "none";
 
-  const payload = {
-    tema: document.getElementById("tema").value,
-    formato: document.getElementById("formato").value,
-    nicho: document.getElementById("nicho").value,
-    modo: document.getElementById("modo").value
-  };
+  const tema = document.getElementById("tema").value;
+  const formato = document.getElementById("formato").value;
+  const nicho = document.getElementById("nicho").value;
+  const modo = document.getElementById("modo").value;
 
   try {
-    const response = await fetch("COLE_AQUI_SEU_WEBHOOK_N8N", {
+    const res = await fetch("https://SEU_DOMINIO.n8n.cloud/webhook/gepeto", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({
+        tema,
+        formato,
+        nicho,
+        modo
+      })
     });
 
-    const data = await response.json();
-
+    const data = await res.json();
     const texto = data.roteiro?.trim();
 
     if (!texto) {
-      resultado.textContent = "❌ Não foi possível gerar o roteiro.";
+      resultado.innerText = "❌ Não foi possível gerar o roteiro.";
       return;
     }
 
-    resultado.textContent = texto;
+    resultado.innerText = texto;
     copiarBtn.style.display = "block";
 
-    // HISTÓRICO LOCAL
-    const historico = JSON.parse(localStorage.getItem("roteiros") || "[]");
-    historico.unshift({
-      tema: payload.tema,
-      data: new Date().toLocaleString(),
-      texto
-    });
-    localStorage.setItem("roteiros", JSON.stringify(historico.slice(0, 20)));
-
-  } catch (error) {
-    resultado.textContent = "❌ Erro ao conectar com o servidor.";
-    console.error(error);
+  } catch (err) {
+    resultado.innerText = "❌ Erro ao gerar roteiro. Verifique o webhook.";
   }
 });
 
 copiarBtn.addEventListener("click", () => {
-  navigator.clipboard.writeText(resultado.textContent);
-  copiarBtn.textContent = "✅ Copiado!";
-  setTimeout(() => {
-    copiarBtn.textContent = "📋 Copiar roteiro";
-  }, 2000);
+  navigator.clipboard.writeText(resultado.innerText);
+  copiarBtn.innerText = "✅ Copiado!";
+  setTimeout(() => copiarBtn.innerText = "📋 Copiar roteiro", 1500);
 });
